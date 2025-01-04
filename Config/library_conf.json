@@ -27,7 +27,9 @@
   "Gio-2.0": {
     "customName": "OGio",
     "excludeClasses": [
-      "GSettingsBackend"
+      "GIOModule",
+      "ThreadedResolver",
+      "SettingsBackend"
     ]
   },
   "GdkPixbuf-2.0": {
