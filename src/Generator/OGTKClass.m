@@ -114,7 +114,7 @@
 
 - (OFComparisonResult)compare:(OGTKClass *)otherClass
 {
-	return [self.className compare:otherClass.className];
+	return [self.type compare:otherClass.type];
 }
 
 - (void)addForwardDeclarationForClass:(OFString *)cType
