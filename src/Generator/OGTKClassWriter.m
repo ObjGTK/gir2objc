@@ -153,8 +153,12 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	}
 
 	// Interface declaration
-	[output appendFormat:@"@interface %@ : %@\n{\n\n}\n\n", [_classDescription type],
-	    [OGTKMapper swapTypes:[_classDescription cParentType]]];
+	OFString *parentClass = ([_classDescription cParentType] != nil
+	        ? [OGTKMapper swapTypes:[_classDescription cParentType]]
+	        : @"OFObject");
+
+	[output
+	    appendFormat:@"@interface %@ : %@\n{\n\n}\n\n", [_classDescription type], parentClass];
 
 	// Function declarations
 	if (_classDescription.hasFunctions) {

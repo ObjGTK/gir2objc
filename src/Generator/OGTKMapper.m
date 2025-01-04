@@ -124,7 +124,7 @@ static OGTKMapper *sharedMyMapper = nil;
 	for (OFString *className in _objcTypeToClassMapping) {
 		OGTKClass *currentClass = [_objcTypeToClassMapping objectForKey:className];
 
-		if (currentClass.cParentType == nil) {
+		if (currentClass.cParentType == nil && ![currentClass.cName isEqual:@"Object"]) {
 			@try {
 				OFString *cParentType =
 				    [self getCTypeFromName:currentClass.parentName];
@@ -203,7 +203,7 @@ static OGTKMapper *sharedMyMapper = nil;
 - (OFString *)swapTypes:(OFString *)type
 {
 	// Convert basic types by hardcoding
-	if ([type isEqual:@"GInitiallyUnowned"] || [type isEqual:@"GObject"])
+	if ([type isEqual:@"GInitiallyUnowned"] || [type isEqual:@"GObject"] || [type isEqual:@"Object"]) 
 		return @"OGObject";
 	else if ([type isEqual:@"const gchar*"] || [type isEqual:@"gchar*"] ||
 	    [type isEqual:@"const char*"] || [type isEqual:@"gchar*"])
