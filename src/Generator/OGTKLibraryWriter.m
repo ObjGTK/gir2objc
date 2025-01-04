@@ -13,6 +13,7 @@
 #import "OGTKLibrary.h"
 #import "OGTKMapper.h"
 #import "OGTKTemplate.h"
+#include <sys/stat.h>
 
 @implementation OGTKLibraryWriter
 
@@ -97,6 +98,10 @@
 			//     @"Copying file [%@] to [%@]...", srcFile,
 			//     destFile);
 			[fileMgr copyItemAtPath:srcFile toPath:destFile];
+		}
+
+		if ([[destFile lastPathComponent] isEqual:@"autogen.sh"]) {
+			chmod([destFile UTF8String], 0755);
 		}
 	}
 }
