@@ -98,13 +98,13 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// OFLog(@"Writing header file for class %@.", _classDescription.type);
 	[output appendString:[OGTKClassWriter generateLicense:[OFString stringWithFormat:@"%@.h",
-	                                                                _classDescription.type]]];
+	                                                          _classDescription.type]]];
 
 	[output appendString:@"\n"];
 
 	// Imports/Dependencies
 	OFMutableString *importDependencies = [OFMutableString string];
-	for (OFString *dependency in _classDescription.dependsOnClasses) {
+	for (OFString *dependency in _classDescription.dependsOnClasses.allObjects.sortedArray) {
 
 		if ([[OGTKMapper swapTypes:dependency] isEqual:@"OGObject"])
 			[importDependencies appendString:@"#import <OGObject/OGObject.h>\n"];
@@ -131,11 +131,12 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Forward class declarations (for circular dependencies)
 	if (_classDescription.forwardDeclarationForClasses.count > 0) {
-		for (OFString *gobjClassName in _classDescription.forwardDeclarationForClasses) {
+		for (OFString *gobjClassName in _classDescription.forwardDeclarationForClasses
+		         .allObjects.sortedArray) {
 			if ([OGTKMapper isGobjType:gobjClassName] &&
 			    [OGTKMapper isTypeSwappable:gobjClassName])
 				[output appendFormat:@"@class %@;\n",
-				        [OGTKMapper swapTypes:gobjClassName]];
+				    [OGTKMapper swapTypes:gobjClassName]];
 		}
 
 		[output appendString:@"\n"];
@@ -153,7 +154,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Interface declaration
 	[output appendFormat:@"@interface %@ : %@\n{\n\n}\n\n", [_classDescription type],
-	        [OGTKMapper swapTypes:[_classDescription cParentType]]];
+	    [OGTKMapper swapTypes:[_classDescription cParentType]]];
 
 	// Function declarations
 	if (_classDescription.hasFunctions) {
@@ -172,7 +173,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 		// Constructor declarations
 		for (OGTKMethod *ctor in _classDescription.constructors) {
 			[output appendFormat:@"- (instancetype)%@;\n",
-			        [OGTKUtil convertFunctionToInit:ctor.sig]];
+			    [OGTKUtil convertFunctionToInit:ctor.sig]];
 		}
 	}
 
@@ -207,7 +208,8 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Imports for forward class declarations (for circular dependencies)
 	if (_classDescription.forwardDeclarationForClasses.count > 0) {
-		for (OFString *gobjClassName in _classDescription.forwardDeclarationForClasses) {
+		for (OFString *gobjClassName in _classDescription.forwardDeclarationForClasses
+		         .allObjects.sortedArray) {
 			if ([OGTKMapper isGobjType:gobjClassName] &&
 			    [OGTKMapper isTypeSwappable:gobjClassName]) {
 
@@ -229,7 +231,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	// Constructor implementations
 	for (OGTKMethod *ctor in _classDescription.constructors) {
 		[output appendFormat:@"- (instancetype)%@",
-		        [OGTKUtil convertFunctionToInit:[ctor sig]]];
+		    [OGTKUtil convertFunctionToInit:[ctor sig]]];
 
 		[output appendString:@"\n{\n"];
 
@@ -239,13 +241,13 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 		// Init GObject and hold result
 		OFMutableString *constructorCall =
 		    [OFMutableString stringWithFormat:@"%@(%@)", ctor.cIdentifier,
-		                     [self generateCParameterListString:ctor.parameters
-		                                        throwsException:ctor.throws]];
+		        [self generateCParameterListString:ctor.parameters
+		                           throwsException:ctor.throws]];
 		OFString *castedConstructorCall =
 		    [_classDescription castGObjectMacro:constructorCall];
 
 		[output appendFormat:@"\t%@* gobjectValue = %@;\n\n", _classDescription.cType,
-		        castedConstructorCall];
+		    castedConstructorCall];
 
 		if (_classDescription.derivedFromInitiallyUnowned) {
 			[output
@@ -257,13 +259,13 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 		// Process error handling of the GObject init
 		if (ctor.throws)
 			[output appendString:
-			            [self errorHandlingForGObjectVar:@"gobjectValue"
-			                                   ownership:ctor.cOwnershipTransferType]];
+			        [self errorHandlingForGObjectVar:@"gobjectValue"
+			                               ownership:ctor.cOwnershipTransferType]];
 
 		[output appendString:InitTry];
 		[output appendFormat:@"\t\tself = %@;\n",
-		        [OGTKUtil getFunctionCallForConstructorOfType:_classDescription.cType
-		                                      withConstructor:@"gobjectValue"]];
+		    [OGTKUtil getFunctionCallForConstructorOfType:_classDescription.cType
+		                                  withConstructor:@"gobjectValue"]];
 
 		[output appendString:InitCatch];
 
@@ -274,7 +276,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// GObject getter method implementation
 	[output appendFormat:@"- (%@*)%@\n{\n\treturn %@;\n}\n\n", _classDescription.cType,
-	        @"castedGObject", [_mapper selfTypeMethodCall:_classDescription.cType]];
+	    @"castedGObject", [_mapper selfTypeMethodCall:_classDescription.cType]];
 
 	// Method implementations
 	for (OGTKMethod *meth in _classDescription.methods) {
@@ -307,14 +309,12 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 		returnTypeDescriptor = [_mapper classInfoByGobjType:method.cReturnType];
 
 	OFString *cClassFuncSig = [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
-	                                    [self generateCParameterListString:method.parameters
-	                                                       throwsException:method.throws]];
+	    [self generateCParameterListString:method.parameters throwsException:method.throws]];
 
-	OFString *cInstanceFuncSig =
-	    [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
-	              [self generateCParameterListWithInstanceString:_classDescription.type
-	                                                   andParams:method.parameters
-	                                             throwsException:method.throws]];
+	OFString *cInstanceFuncSig = [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
+	    [self generateCParameterListWithInstanceString:_classDescription.type
+	                                         andParams:method.parameters
+	                                   throwsException:method.throws]];
 
 	// No return type/GObject/ObjC object
 	if (method.returnsVoid) {
@@ -344,12 +344,13 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 			[output appendFormat:@"\t%@ gobjectValue = ", method.cReturnType];
 
 			if (isClassMethod) {
-				if(returnTypeDescriptor != nil)
-					[output appendString:[returnTypeDescriptor castGObjectMacro:cClassFuncSig]];
+				if (returnTypeDescriptor != nil)
+					[output appendString:[returnTypeDescriptor
+					                         castGObjectMacro:cClassFuncSig]];
 				else
 					[output appendString:cClassFuncSig];
 			} else {
-				if(returnTypeDescriptor != nil)
+				if (returnTypeDescriptor != nil)
 					[output
 					    appendString:[returnTypeDescriptor
 					                     castGObjectMacro:cInstanceFuncSig]];
@@ -416,8 +417,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 				// Don't take care ownership if we return plain C types
 				// (GIRReturnValueOwnershipNone!) That's the task of the caller in
 				// this case
-				[output
-				    appendString:
+				[output appendString:
 				        [self errorHandlingForGObjectVar:varName
 				                               ownership:
 				                                   GIRReturnValueOwnershipNone]];
@@ -468,7 +468,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	if ([_classDescription.namespace isEqual:dependencyClassDescription.namespace]) {
 
 		result = [OFString stringWithFormat:@"#import \"%@.h\"\n",
-		                   [OGTKMapper swapTypes:dependencyGobjType]];
+		    [OGTKMapper swapTypes:dependencyGobjType]];
 
 	} else {
 		// We need to get the ObjC name of the
@@ -488,7 +488,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 		_classDescription.topMostGraphNode = true;
 
 		result = [OFString stringWithFormat:@"#import <%@/%@.h>\n", depLibDescr.name,
-		                   dependencyClassDescription.type];
+		    dependencyClassDescription.type];
 	}
 
 	return result;

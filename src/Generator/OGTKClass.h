@@ -63,6 +63,7 @@
 - (void)addMethod:(OGTKMethod *)meth;
 - (void)addDependency:(OFString *)cType;
 - (void)removeForwardDeclarationsFromDependencies;
+- (OFComparisonResult)compare:(OGTKClass *)otherClass;
 - (void)addForwardDeclarationForClass:(OFString *)cType;
 
 @end

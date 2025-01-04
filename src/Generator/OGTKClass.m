@@ -74,7 +74,8 @@
 
 - (OFString *)castGObjectMacro:(OFString *)variableName
 {
-	return [OFString stringWithFormat:@"G_TYPE_CHECK_INSTANCE_CAST(%@, %@, %@)", variableName, _cType, _cType];
+	return [OFString stringWithFormat:@"G_TYPE_CHECK_INSTANCE_CAST(%@, %@, %@)", variableName,
+	    _cType, _cType];
 }
 
 - (void)addConstructor:(OGTKMethod *)constructor
@@ -109,6 +110,11 @@
 - (void)removeForwardDeclarationsFromDependencies
 {
 	[_dependsOnClasses minusSet:_forwardDeclarationForClasses];
+}
+
+- (OFComparisonResult)compare:(OGTKClass *)otherClass
+{
+	return [self.className compare:otherClass.className];
 }
 
 - (void)addForwardDeclarationForClass:(OFString *)cType
