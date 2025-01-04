@@ -66,8 +66,8 @@
 	if ([self.cNSIdentifierPrefix isEqual:@"Gtk"] && [self.cType hasPrefix:@"Gtk"])
 		return [OFString stringWithFormat:@"OGTK%@", _cName];
 
-	if ([self.cNSIdentifierPrefix isEqual:@"G"] && [self.cType hasPrefix:@"G"])
-		return [OFString stringWithFormat:@"OG%@", _cName];
+	if ([self.cNSIdentifierPrefix hasPrefix:@"G"] && [self.cType hasPrefix:@"G"])
+		return [OFString stringWithFormat:@"O%@", self.cType];
 
 	return [OFString stringWithFormat:@"OG%@", self.cType];
 }
