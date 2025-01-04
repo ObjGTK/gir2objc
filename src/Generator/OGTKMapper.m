@@ -166,11 +166,12 @@ static OGTKMapper *sharedMyMapper = nil;
 			[self addDependenciesFromMethod:method to:classInfo];
 
 		if (classInfo.parentName == nil ||
+				[classInfo.parentName isEqual:@"Object"] ||
 		    [classInfo.parentName isEqual:@"GObject.Object"] ||
 		    [classInfo.parentName isEqual:@"GObject.InitiallyUnowned"])
 			continue;
 
-		if (![self isGobjType:classInfo.cParentType]) {
+		if (![self isGobjType:classInfo.cParentType] && ![classInfo.cName isEqual:@"Object"]) {
 			OFLog(@"Parent c type of %@ is not in the GObject inheritance chain, "
 			      @"parent: %@, \n"
 			      @"Removing class…",
