@@ -9,7 +9,6 @@
     "GModule",
     "libxml2",
     "xlib",
-    "cairo",
-    "Soup"
+    "cairo"
   ]
 }

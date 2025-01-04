@@ -47,4 +47,15 @@
       "NglRenderer"
     ]
   },
+  "Soup-3.0": {
+    "customName": "OGSoup",
+    "excludeClasses": [
+      "AuthBasic",
+      "AuthDigest",
+      "AuthDomainDigest",
+      "AuthDomainBasic",
+      "AuthNegotiate",
+      "AuthNTLM"
+    ]
+  }
 }
