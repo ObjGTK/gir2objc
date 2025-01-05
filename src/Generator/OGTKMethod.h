@@ -40,4 +40,6 @@
 @property (nonatomic) bool isGetter;
 @property (nonatomic) bool isSetter;
 
+- (OFString *)nameOfTheOnlyParameter;
+
 @end

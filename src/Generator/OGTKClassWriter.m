@@ -248,15 +248,9 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Constructor implementations
 	for (OGTKMethod *ctor in _classDescription.constructors) {
-		OFString *nameOfFirstParameter = nil;
-		if (ctor.parameters.count == 1) {
-			OGTKParameter *param = ctor.parameters.firstObject;
-			nameOfFirstParameter = param.name;
-		}
-
 		[output appendFormat:@"- (instancetype)%@",
 		    [OGTKUtil convertFunctionToInit:[ctor sig]
-		               nameOfFirstParameter:nameOfFirstParameter]];
+		               nameOfFirstParameter:[ctor nameOfTheOnlyParameter]]];
 
 		[output appendString:@"\n{\n"];
 

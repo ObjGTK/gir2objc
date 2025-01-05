@@ -73,6 +73,15 @@
 	}
 }
 
+- (OFString *)nameOfTheOnlyParameter 
+{
+	if(self.parameters.count != 1)
+		return nil;
+
+	OGTKParameter *param = self.parameters.firstObject;
+	return param.name;
+}
+
 - (OFString *)returnType
 {
 	return [OGTKMapper swapTypes:_cReturnType];
