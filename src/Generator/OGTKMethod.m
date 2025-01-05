@@ -62,10 +62,10 @@
 			if (first) {
 				first = false;
 				[output appendFormat:@"%@:(%@)%@",
-				        [OGTKUtil convertUSSToCapCase:p.name], p.type, p.name];
+				    [OGTKUtil convertUSSToCapCase:p.name], p.type, p.name];
 			} else {
 				[output appendFormat:@" %@:(%@)%@",
-				        [OGTKUtil convertUSSToCamelCase:p.name], p.type, p.name];
+				    [OGTKUtil convertUSSToCamelCase:p.name], p.type, p.name];
 			}
 		}
 

@@ -37,10 +37,11 @@
  * @brief Converts GTK style type_new_with_param style functions into ObjGTK
  * initWithParam inits.
  * @param func The GTK style type_new_with_param style function definition
- * @return The Objective-C initWithParam method definition. If func parameter
- * doesn't contain "New" or "new" then it will return nil.
+ * @param paramName Number of the first parameter - will attach "withName" to init when there is
+ * only one parameter
+ * @return The Objective-C initWithParam method definition.
  */
-+ (OFString *)convertFunctionToInit:(OFString *)func;
++ (OFString *)convertFunctionToInit:(OFString *)func nameOfFirstParameter:(OFString *)paramName;
 
 /**
  * @brief Returns a super constructor call for the given type.
