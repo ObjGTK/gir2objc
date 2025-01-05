@@ -72,6 +72,12 @@
 	return [OFString stringWithFormat:@"OG%@", self.cType];
 }
 
+- (OFString *)gTypeMacro
+{
+	return [OFString stringWithFormat:@"%@_TYPE_%@", self.cNSIdentifierPrefix.uppercaseString,
+	    self.cSymbolPrefix.uppercaseString];
+}
+
 - (OFString *)castGObjectMacro:(OFString *)variableName
 {
 	return [OFString stringWithFormat:@"G_TYPE_CHECK_INSTANCE_CAST(%@, %@, %@)", variableName,

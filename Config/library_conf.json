@@ -27,7 +27,6 @@
   "Gio-2.0": {
     "customName": "OGio",
     "excludeClasses": [
-      "GIOModule",
       "ThreadedResolver",
       "SettingsBackend"
     ]
@@ -47,15 +46,4 @@
       "NglRenderer"
     ]
   },
-  "Soup-3.0": {
-    "customName": "OGSoup",
-    "excludeClasses": [
-      "AuthBasic",
-      "AuthDigest",
-      "AuthDomainDigest",
-      "AuthDomainBasic",
-      "AuthNegotiate",
-      "AuthNTLM"
-    ]
-  }
 }

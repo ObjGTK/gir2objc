@@ -124,7 +124,9 @@ static OGTKMapper *sharedMyMapper = nil;
 	for (OFString *className in _objcTypeToClassMapping) {
 		OGTKClass *currentClass = [_objcTypeToClassMapping objectForKey:className];
 
-		if (currentClass.cParentType == nil && ![currentClass.cName isEqual:@"Object"]) {
+		if (currentClass.cParentType == nil &&
+		    !([currentClass.cNSSymbolPrefix isEqual:@"gobject"] &&
+		        [currentClass.cName isEqual:@"Object"])) {
 			@try {
 				OFString *cParentType =
 				    [self getCTypeFromName:currentClass.parentName];
@@ -165,13 +167,13 @@ static OGTKMapper *sharedMyMapper = nil;
 		for (OGTKMethod *method in classInfo.methods)
 			[self addDependenciesFromMethod:method to:classInfo];
 
-		if (classInfo.parentName == nil ||
-				[classInfo.parentName isEqual:@"Object"] ||
+		if (classInfo.parentName == nil || [classInfo.parentName isEqual:@"Object"] ||
 		    [classInfo.parentName isEqual:@"GObject.Object"] ||
 		    [classInfo.parentName isEqual:@"GObject.InitiallyUnowned"])
 			continue;
 
-		if (![self isGobjType:classInfo.cParentType] && ![classInfo.cName isEqual:@"Object"]) {
+		if (![self isGobjType:classInfo.cParentType] &&
+		    ![classInfo.cName isEqual:@"Object"]) {
 			OFLog(@"Parent c type of %@ is not in the GObject inheritance chain, "
 			      @"parent: %@, \n"
 			      @"Removing class…",
@@ -203,7 +205,7 @@ static OGTKMapper *sharedMyMapper = nil;
 - (OFString *)swapTypes:(OFString *)type
 {
 	// Convert basic types by hardcoding
-	if ([type isEqual:@"GInitiallyUnowned"] || [type isEqual:@"GObject"] || [type isEqual:@"Object"]) 
+	if ([type isEqual:@"GInitiallyUnowned"] || [type isEqual:@"GObject"])
 		return @"OGObject";
 	else if ([type isEqual:@"const gchar*"] || [type isEqual:@"gchar*"] ||
 	    [type isEqual:@"const char*"] || [type isEqual:@"gchar*"])
@@ -277,21 +279,19 @@ static OGTKMapper *sharedMyMapper = nil;
 	        ownership == GIRReturnValueOwnershipContainer ||
 	        ownership == GIRReturnValueOwnershipUnknown) &&
 	    [toType isEqual:@"OFString*"]) {
-		return
-		    [OFString stringWithFormat:
-		                  @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
-		                  @"_Nonnull)%@ freeWhenDone:true] : nil)",
-		              name, name];
+		return [OFString stringWithFormat:
+		        @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
+		        @"_Nonnull)%@ freeWhenDone:true] : nil)",
+		    name, name];
 		// Unowned strings
 	} else if (([fromType isEqual:@"const char*"] || [fromType isEqual:@"const gchar*"]) &&
 	    (ownership == GIRReturnValueOwnershipNone ||
 	        ownership == GIRReturnValueOwnershipUnknown) &&
 	    [toType isEqual:@"OFString*"]) {
-		return
-		    [OFString stringWithFormat:
-		                  @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
-		                  @"_Nonnull)%@ freeWhenDone:false] : nil)",
-		              name, name];
+		return [OFString stringWithFormat:
+		        @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
+		        @"_Nonnull)%@ freeWhenDone:false] : nil)",
+		    name, name];
 	} else if ([fromType isEqual:@"OFString*"] &&
 	    ([toType isEqual:@"const gchar*"] || [toType isEqual:@"const char*"])) {
 		return [OFString stringWithFormat:@"[%@ UTF8String]", name];
@@ -302,12 +302,12 @@ static OGTKMapper *sharedMyMapper = nil;
 
 	// Then try to return generic Gobj type conversion
 	if ([self isGobjType:fromType] && [self isObjcType:toType]) {
-		// Converting from Gobjc -> Objc
 
-		return [OFString
-		    stringWithFormat:@"[%@ withGObject:%@]", [self stripAsterisks:toType], name];
+		// Converting from Gobjc -> Objc
+		return [OFString stringWithFormat:@"OGWrapperClassAndObjectForGObject(%@)", name];
 
 	} else if ([self isObjcType:fromType] && [self isGobjType:toType]) {
+
 		// Converting from Objc -> Gobj
 		return [OFString stringWithFormat:@"[%@ %@]", name, @"castedGObject"];
 	}
@@ -341,7 +341,7 @@ static OGTKMapper *sharedMyMapper = nil;
 	// dependencies
 	if ([name isEqual:@"GObject.InitiallyUnowned"])
 		return @"GInitiallyUnowned";
-	else if ([name containsString:@"GObject."] || [name containsString:@"Soup."])
+	else if ([name containsString:@"GObject."])
 		return @"GObject";
 
 	// Case: Name has a namespace prefix

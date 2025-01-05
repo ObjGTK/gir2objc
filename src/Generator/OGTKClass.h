@@ -50,6 +50,7 @@
 @property (readonly, nonatomic) bool hasMethods;
 @property (readonly, nonatomic) OFMutableSet *dependsOnClasses;
 @property (readonly, nonatomic) OFMutableSet *forwardDeclarationForClasses;
+@property (readonly, nonatomic) OFString *gTypeMacro;
 @property bool visited;
 @property bool topMostGraphNode;
 @property bool derivedFromInitiallyUnowned;

@@ -153,16 +153,14 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	}
 
 	// Interface declaration
-	OFString *parentClass = ([_classDescription cParentType] != nil
-	        ? [OGTKMapper swapTypes:[_classDescription cParentType]]
-	        : @"OFObject");
-
+	OFString *parentClass = [OGTKMapper swapTypes:[_classDescription cParentType]];
 	[output
 	    appendFormat:@"@interface %@ : %@\n{\n\n}\n\n", [_classDescription type], parentClass];
 
 	// Function declarations
 	if (_classDescription.hasFunctions) {
 		[output appendString:@"/**\n * Functions\n */\n"];
+		[output appendString:@"+ (void)load;\n\n"];
 
 		for (OGTKMethod *func in _classDescription.functions) {
 			[output appendFormat:@"\n%@\n", [self generateDocumentationForMethod:func]];
@@ -226,6 +224,15 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Implementation declaration
 	[output appendFormat:@"@implementation %@\n\n", _classDescription.type];
+
+	[output appendFormat:
+	        @"+ (void)load\n{\n"
+	        @"\tGType gtypeToAssociate = %@;\n\n"
+	        @"\tif (gtypeToAssociate == 0)\n"
+	        @"\t\treturn;\n\n"
+	        @"\tg_type_set_qdata(gtypeToAssociate, [super wrapperQuark], [self class]);\n"
+	        @"}\n\n",
+	    _classDescription.gTypeMacro];
 
 	// Class function implementation
 	for (OGTKMethod *func in _classDescription.functions) {
@@ -307,11 +314,6 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	if (method.throws)
 		[output appendString:PrepareErrorHandling];
 
-	OGTKClass *returnTypeDescriptor = nil;
-
-	if ([_mapper isGobjType:method.cReturnType])
-		returnTypeDescriptor = [_mapper classInfoByGobjType:method.cReturnType];
-
 	OFString *cClassFuncSig = [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
 	    [self generateCParameterListString:method.parameters throwsException:method.throws]];
 
@@ -348,18 +350,9 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 			[output appendFormat:@"\t%@ gobjectValue = ", method.cReturnType];
 
 			if (isClassMethod) {
-				if (returnTypeDescriptor != nil)
-					[output appendString:[returnTypeDescriptor
-					                         castGObjectMacro:cClassFuncSig]];
-				else
-					[output appendString:cClassFuncSig];
+				[output appendString:cClassFuncSig];
 			} else {
-				if (returnTypeDescriptor != nil)
-					[output
-					    appendString:[returnTypeDescriptor
-					                     castGObjectMacro:cInstanceFuncSig]];
-				else
-					[output appendString:cInstanceFuncSig];
+				[output appendString:cInstanceFuncSig];
 			}
 
 			[output appendString:@";\n\n"];
@@ -402,7 +395,8 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 		} else {
 			// Return type, but no type conversion for return type
 
-			[output appendFormat:@"\t%@ returnValue = ", method.returnType];
+			[output appendFormat:@"\t%@ returnValue = (%@)", method.returnType,
+			    method.returnType];
 
 			if (isClassMethod) {
 				[output appendString:cClassFuncSig];
