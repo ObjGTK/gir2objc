@@ -10,6 +10,7 @@
     "libxml2",
     "xlib",
     "cairo",
-    "Soup"
+    "Soup",
+    "Gee"
   ]
 }
