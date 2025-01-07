@@ -29,7 +29,8 @@ static OFString *myDataDir;
 
 	if ([output length] > 1) {
 		return [OFString stringWithFormat:@"%@%@",
-		    [[output substringToIndex:1] lowercaseString], [output substringFromIndex:1]];
+		                 [[output substringToIndex:1] lowercaseString],
+		                 [output substringFromIndex:1]];
 	} else {
 		return [output lowercaseString];
 	}
@@ -52,8 +53,8 @@ static OFString *myDataDir;
 				[output appendString:item];
 			} else {
 				[output appendFormat:@"%@%@",
-				    [[item substringToIndex:1] uppercaseString],
-				    [item substringFromIndex:1]];
+				        [[item substringToIndex:1] uppercaseString],
+				        [item substringFromIndex:1]];
 			}
 			previousItemWasSingleChar = false;
 		} else {
@@ -75,17 +76,26 @@ static OFString *myDataDir;
 	}
 
 	if (range.location == OFNotFound) {
-		OFString *outputFormat = [OFString stringWithFormat:@"%@%@",
-		    [[func substringToIndex:1] uppercaseString], [func substringFromIndex:1]];
+		OFString *outputFormat =
+		    [OFString stringWithFormat:@"%@%@", [[func substringToIndex:1] uppercaseString],
+		              [func substringFromIndex:1]];
 
 		if (paramName != nil)
 			return [OFString stringWithFormat:@"initWith%@%@", paramName, outputFormat];
 
 		return [OFString stringWithFormat:@"init%@", outputFormat];
 	} else {
-		if (paramName != nil)
+		if (paramName != nil) {
+			OFString *existingSuffixToCheck =
+			    [OFString stringWithFormat:@"With%@", paramName];
+			OFRange withRange = [func rangeOfString:existingSuffixToCheck];
+			if (withRange.location == 3)
+				return [OFString stringWithFormat:@"init%@",
+				                 [func substringFromIndex:(range.location + 3)]];
+
 			return [OFString stringWithFormat:@"initWith%@%@", paramName,
-			    [func substringFromIndex:range.location + 3]];
+			                 [func substringFromIndex:range.location + 3]];
+		}
 
 		return [OFString
 		    stringWithFormat:@"init%@", [func substringFromIndex:range.location + 3]];
@@ -127,7 +137,8 @@ static OFString *myDataDir;
 {
 	if (dictGlobalConf == nil) {
 
-		dictGlobalConf = [[OFMutableDictionary alloc] ogtk_initWithJsonDictionaryOfFile:
+		dictGlobalConf = [[OFMutableDictionary alloc]
+		    ogtk_initWithJsonDictionaryOfFile:
 		        [myDataDir stringByAppendingPathComponent:@"Config/global_conf.json"]];
 	}
 
@@ -137,7 +148,8 @@ static OFString *myDataDir;
 + (id)libraryConfigFor:(OFString *)libraryIdentifier
 {
 	if (dictLibraryConf == nil) {
-		dictLibraryConf = [[OFMutableDictionary alloc] ogtk_initWithJsonDictionaryOfFile:
+		dictLibraryConf = [[OFMutableDictionary alloc]
+		    ogtk_initWithJsonDictionaryOfFile:
 		        [myDataDir stringByAppendingPathComponent:@"Config/library_conf.json"]];
 	}
 
