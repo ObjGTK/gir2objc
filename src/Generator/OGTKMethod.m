@@ -6,7 +6,6 @@
  */
 
 #import "OGTKMethod.h"
-#include <ObjFW/OFString.h>
 #import "OGTKMapper.h"
 #import "OGTKUtil.h"
 
