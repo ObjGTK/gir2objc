@@ -6,6 +6,7 @@
  */
 
 #import "OGTKParameter.h"
+#include <ObjFW/OFString.h>
 #import "OGTKUtil.h"
 
 /**
@@ -30,7 +31,11 @@
 
 - (OFString *)name
 {
-	return [OGTKUtil convertUSSToCamelCase:_cName];
+	OFString *name = [OGTKUtil convertUSSToCamelCase:_cName];
+	if([name isEqual:@"id"])
+		return @"identifier";
+
+	return name;
 }
 
 @end

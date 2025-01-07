@@ -6,6 +6,7 @@
  */
 
 #import "OGTKMethod.h"
+#include <ObjFW/OFString.h>
 #import "OGTKMapper.h"
 #import "OGTKUtil.h"
 
@@ -38,7 +39,14 @@
 
 - (OFString *)name
 {
-	return [OGTKUtil convertUSSToCamelCase:_name];
+	OFString *name = [OGTKUtil convertUSSToCamelCase:_name];
+
+	if([name isEqual:@"release"])
+		return @"decreaseCount";
+	else if([name isEqual:@"retain"])
+		return @"increaseCount";
+
+	return name;
 }
 
 - (OFString *)sig
