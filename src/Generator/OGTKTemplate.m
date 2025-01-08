@@ -232,7 +232,7 @@ OFString *const kPkgCheckModulesTemplateFile = @"pkgcheckmodules.tmpl";
 	OFMutableString *shortName;
 	if (index != OFNotFound) {
 		shortName =
-		    [OFMutableString stringWithString:[packageName substringToIndex:index - 1]];
+		    [OFMutableString stringWithString:[packageName substringToIndex:index]];
 		[shortName replaceOccurrencesOfString:@"-" withString:@""];
 		[shortName replaceOccurrencesOfString:@"_" withString:@""];
 	} else
