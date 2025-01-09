@@ -7,7 +7,6 @@
 
 #import "OGTKUtil.h"
 
-#import "../Exceptions/OGTKReceivedNilExpectedStringException.h"
 #import "OFDictionary+OGTKJsonDictionaryOfFile.h"
 #import "OGTKMapper.h"
 
