@@ -5,7 +5,6 @@
  */
 
 #import "OGTKLibrary.h"
-#import "../Exceptions/OGTKReceivedNilExpectedStringException.h"
 
 @interface OGTKLibrary ()
 

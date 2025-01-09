@@ -6,7 +6,6 @@
  */
 
 #import "OGTKClass.h"
-#import "../Exceptions/OGTKReceivedNilExpectedStringException.h"
 
 @implementation OGTKClass
 @synthesize cName = _cName, cType = _cType, namespace = _namespace, parentName = _parentName,
@@ -60,9 +59,6 @@
 
 - (OFString *)type
 {
-	if (self.cType == nil)
-		@throw [OGTKReceivedNilExpectedStringException exception];
-
 	if ([self.cNSIdentifierPrefix isEqual:@"Gtk"] && [self.cType hasPrefix:@"Gtk"])
 		return [OFString stringWithFormat:@"OGTK%@", _cName];
 

@@ -279,19 +279,21 @@ static OGTKMapper *sharedMyMapper = nil;
 	        ownership == GIRReturnValueOwnershipContainer ||
 	        ownership == GIRReturnValueOwnershipUnknown) &&
 	    [toType isEqual:@"OFString*"]) {
-		return [OFString stringWithFormat:
-		        @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
-		        @"_Nonnull)%@ freeWhenDone:true] : nil)",
-		    name, name];
+		return
+		    [OFString stringWithFormat:
+		                  @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
+		                  @"_Nonnull)%@ freeWhenDone:true] : nil)",
+		              name, name];
 		// Unowned strings
 	} else if (([fromType isEqual:@"const char*"] || [fromType isEqual:@"const gchar*"]) &&
 	    (ownership == GIRReturnValueOwnershipNone ||
 	        ownership == GIRReturnValueOwnershipUnknown) &&
 	    [toType isEqual:@"OFString*"]) {
-		return [OFString stringWithFormat:
-		        @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
-		        @"_Nonnull)%@ freeWhenDone:false] : nil)",
-		    name, name];
+		return
+		    [OFString stringWithFormat:
+		                  @"((%@ != NULL) ? [OFString stringWithUTF8StringNoCopy:(char * "
+		                  @"_Nonnull)%@ freeWhenDone:false] : nil)",
+		              name, name];
 	} else if ([fromType isEqual:@"OFString*"] &&
 	    ([toType isEqual:@"const gchar*"] || [toType isEqual:@"const char*"])) {
 		return [OFString stringWithFormat:@"[%@ UTF8String]", name];
@@ -361,7 +363,7 @@ static OGTKMapper *sharedMyMapper = nil;
 		return classInfo.cType;
 
 	// Case: We did not find any c type
-	@throw [OFInvalidArgumentException exception];
+	@throw [OFUndefinedKeyException exceptionWithObject:_girNameToClassMapping key:name];
 }
 
 - (OGTKClass *)classInfoByGobjType:(OFString *)gobjTypeUnfiltered

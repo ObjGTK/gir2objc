@@ -4,7 +4,8 @@ SRCS = OGTKDataProcessingNotImplementedException.m \
 	OGTKNamespaceContainsNoClassesException.m \
 	OGTKNoGIRAPIException.m \
 	OGTKNoGIRDictException.m \
-	OGTKReceivedNilExpectedStringException.m
+	OGTKReceivedNilExpectedStringException.m \
+	OGTKClassNoTypeException.m
 
 STATIC_LIB_NOINST = lib.a
 

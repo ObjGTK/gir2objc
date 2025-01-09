@@ -18,6 +18,7 @@
 #import "Exceptions/OGTKNamespaceContainsNoClassesException.h"
 #import "Exceptions/OGTKNoGIRAPIException.h"
 #import "Exceptions/OGTKNoGIRDictException.h"
+#import "Exceptions/OGTKClassNoTypeException.h"
 
 #import "XMLReader/XMLReader.h"
 
@@ -193,7 +194,8 @@
 		objCClass.cType = girClass.cType;
 	else if (girClass.glibTypeName != nil && girClass.glibTypeName.length > 0)
 		objCClass.cType = girClass.glibTypeName;
-	// TODO else: throw exception here
+	else
+		@throw [OGTKClassNoTypeException exceptionForGirClass:girClass];
 
 	[objCClass setDocumentation:girClass.doc.docText];
 
