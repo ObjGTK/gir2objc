@@ -37,21 +37,21 @@
  * @brief Converts GTK style type_new_with_param style functions into ObjGTK
  * initWithParam inits.
  * @param func The GTK style type_new_with_param style function definition
- * @param paramName Number of the first parameter - will attach "withName" to init when there is
- * only one parameter
+ * @param methodName Name of the first part of the selector. For convenience constructors it's
+ * usually the name of the class/type.
  * @return The Objective-C initWithParam method definition.
  */
-+ (OFString *)convertFunctionToInit:(OFString *)func nameOfFirstParameter:(OFString *)paramName;
++ (OFString *)convertFunctionToInit:(OFString *)func
+                    UsingMethodName:(OFString *)methodName;
 
 /**
  * @brief Returns a super constructor call for the given type.
- * @param cType While it takes a cType, this function currently assumes
- * everything is a GObject (FOR FUTURE USE).
+ * @param type Takes the ObjC type to construct from.
  * @param cCtor The constructor call as string.
  * @return The super constructor call in the format of ```[super
  * initWithGObject:gtk_class_new(params)]```
  */
-+ (OFString *)getFunctionCallForConstructorOfType:(OFString *)cType
++ (OFString *)getFunctionCallForConstructorOfType:(OFString *)type
                                   withConstructor:(OFString *)cCtor;
 
 /**

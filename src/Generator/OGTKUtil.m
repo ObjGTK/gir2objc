@@ -65,9 +65,9 @@ static OFString *myDataDir;
 	return output;
 }
 
-+ (OFString *)convertFunctionToInit:(OFString *)func nameOfFirstParameter:(OFString *)paramName
++ (OFString *)convertFunctionToInit:(OFString *)func UsingMethodName:(OFString *)methodName
 {
-	paramName = [self convertUSSToCapCase:paramName];
+	methodName = [self convertUSSToCamelCase:methodName];
 
 	OFRange range = [func rangeOfString:@"New"];
 	if (range.location == OFNotFound) {
@@ -79,32 +79,16 @@ static OFString *myDataDir;
 		    [OFString stringWithFormat:@"%@%@", [[func substringToIndex:1] uppercaseString],
 		              [func substringFromIndex:1]];
 
-		if (paramName != nil)
-			return [OFString stringWithFormat:@"initWith%@%@", paramName, outputFormat];
-
-		return [OFString stringWithFormat:@"init%@", outputFormat];
+		return [OFString stringWithFormat:@"%@%@", methodName, outputFormat];
 	} else {
-		if (paramName != nil) {
-			OFString *existingSuffixToCheck =
-			    [OFString stringWithFormat:@"With%@", paramName];
-			OFRange withRange = [func rangeOfString:existingSuffixToCheck];
-			if (withRange.location == 3)
-				return [OFString stringWithFormat:@"init%@",
-				                 [func substringFromIndex:(range.location + 3)]];
-
-			return [OFString stringWithFormat:@"initWith%@%@", paramName,
-			                 [func substringFromIndex:range.location + 3]];
-		}
-
-		return [OFString
-		    stringWithFormat:@"init%@", [func substringFromIndex:range.location + 3]];
+		return [OFString stringWithFormat:@"%@%@", methodName,
+		                 [func substringFromIndex:range.location + 3]];
 	}
 }
 
-+ (OFString *)getFunctionCallForConstructorOfType:(OFString *)cType
-                                  withConstructor:(OFString *)cCtor
++ (OFString *)getFunctionCallForConstructorOfType:(OFString *)type withConstructor:(OFString *)cCtor
 {
-	return [OFString stringWithFormat:@"[super initWithGObject:%@]", cCtor];
+	return [OFString stringWithFormat:@"[[%@ alloc] initWithGObject:%@]", type, cCtor];
 }
 
 + (bool)isUppercase:(OFString *)character

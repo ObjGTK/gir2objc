@@ -22,7 +22,7 @@ static OFString *const PrepareErrorHandling = @"\tGError* err = NULL;\n\n";
 static OFString *const InitTry = @"\t@try {\n";
 static OFString *const InitCatch = @"\t} @catch (id e) {\n"
                                    @"\t\tg_object_unref(gobjectValue);\n"
-                                   @"\t\t[self release];\n"
+                                   @"\t\t[wrapperObject release];\n"
                                    @"\t\t@throw e;\n"
                                    @"\t}\n\n";
 
@@ -174,15 +174,9 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 		// Constructor declarations
 		for (OGTKMethod *ctor in _classDescription.constructors) {
-			OFString *nameOfFirstParameter = nil;
-			if (ctor.parameters.count == 1) {
-				OGTKParameter *param = ctor.parameters.firstObject;
-				nameOfFirstParameter = param.name;
-			}
-
-			[output appendFormat:@"- (instancetype)%@;\n",
+			[output appendFormat:@"+ (instancetype)%@;\n",
 			        [OGTKUtil convertFunctionToInit:ctor.sig
-			                   nameOfFirstParameter:nameOfFirstParameter]];
+			                        UsingMethodName:_classDescription.cName]];
 		}
 	}
 
@@ -248,9 +242,9 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Constructor implementations
 	for (OGTKMethod *ctor in _classDescription.constructors) {
-		[output appendFormat:@"- (instancetype)%@",
-		        [OGTKUtil convertFunctionToInit:[ctor sig]
-		                   nameOfFirstParameter:[ctor nameOfTheOnlyParameter]]];
+		[output appendFormat:@"+ (instancetype)%@",
+		        [OGTKUtil convertFunctionToInit:ctor.sig
+		                        UsingMethodName:_classDescription.cName]];
 
 		[output appendString:@"\n{\n"];
 
@@ -281,15 +275,16 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 			            [self errorHandlingForGObjectVar:@"gobjectValue"
 			                                   ownership:ctor.cOwnershipTransferType]];
 
+		[output appendFormat:@"\t%@* wrapperObject;\n", _classDescription.type];
 		[output appendString:InitTry];
-		[output appendFormat:@"\t\tself = %@;\n",
-		        [OGTKUtil getFunctionCallForConstructorOfType:_classDescription.cType
+		[output appendFormat:@"\t\twrapperObject = %@;\n",
+		        [OGTKUtil getFunctionCallForConstructorOfType:_classDescription.type
 		                                      withConstructor:@"gobjectValue"]];
 
 		[output appendString:InitCatch];
 
 		[output appendString:@"\tg_object_unref(gobjectValue);\n"];
-		[output appendString:@"\treturn self;\n"];
+		[output appendString:@"\treturn [wrapperObject autorelease];\n"];
 		[output appendString:@"}\n\n"];
 	}
 
