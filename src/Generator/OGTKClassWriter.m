@@ -261,6 +261,8 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 		[output appendFormat:@"\t%@* gobjectValue = %@;\n\n", _classDescription.cType,
 		        castedConstructorCall];
+		[output appendString:@"\tif OF_UNLIKELY(!gobjectValue)\n"];
+		[output appendString:@"\t\t@throw [OGObjectGObjectToWrapCreationFailedException exception];\n\n"];
 
 		if (_classDescription.derivedFromInitiallyUnowned) {
 			[output
