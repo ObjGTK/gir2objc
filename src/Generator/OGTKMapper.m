@@ -311,6 +311,11 @@ static OGTKMapper *sharedMyMapper = nil;
 
 		// Converting from Gobjc -> Objc
 		return [OFString stringWithFormat:@"OGWrapperClassAndObjectForGObject(%@)", name];
+	
+	} else if ([fromType isEqual:@"OGObject*"] && [toType isEqual:@"GObject*"]) {
+
+		return [OFString stringWithFormat:@"[%@ %@]", name, @"gObject"];
+
 	} else if ([self isObjcType:fromType] && [self isGobjType:toType]) {
 
 		// Converting from Objc -> Gobj
