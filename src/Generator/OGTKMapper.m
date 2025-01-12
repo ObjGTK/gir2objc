@@ -207,6 +207,8 @@ static OGTKMapper *sharedMyMapper = nil;
 	// Convert basic types by hardcoding
 	if ([type isEqual:@"GInitiallyUnowned"] || [type isEqual:@"GObject"])
 		return @"OGObject";
+	else if ([type isEqual:@"GInitiallyUnowned*"] || [type isEqual:@"GObject*"])
+		return @"OGObject*";
 	else if ([type isEqual:@"const gchar*"] || [type isEqual:@"gchar*"] ||
 	    [type isEqual:@"const char*"] || [type isEqual:@"gchar*"])
 		return @"OFString*";
@@ -255,8 +257,8 @@ static OGTKMapper *sharedMyMapper = nil;
 {
 	return [type isEqual:@"gchar*"] || [type isEqual:@"const gchar*"] ||
 	    [type isEqual:@"char*"] || [type isEqual:@"const char*"] ||
-	    [type isEqual:@"OFString*"] || [type isEqual:@"OFArray*"] || [self isGobjType:type] ||
-	    [self isObjcType:type];
+	    [type isEqual:@"GObject*"] || [type isEqual:@"OFString*"] ||
+	    [type isEqual:@"OFArray*"] || [self isGobjType:type] || [self isObjcType:type];
 }
 
 - (OFString *)convertType:(OFString *)fromType withName:(OFString *)name toType:(OFString *)toType
@@ -303,11 +305,12 @@ static OGTKMapper *sharedMyMapper = nil;
 	}
 
 	// Then try to return generic Gobj type conversion
-	if ([self isGobjType:fromType] && [self isObjcType:toType]) {
+	if ((([fromType isEqual:@"GObject*"] || [fromType isEqual:@"GInitiallyUnowned*"]) &&
+	        [toType isEqual:@"OGObject*"]) ||
+	    ([self isGobjType:fromType] && [self isObjcType:toType])) {
 
 		// Converting from Gobjc -> Objc
 		return [OFString stringWithFormat:@"OGWrapperClassAndObjectForGObject(%@)", name];
-
 	} else if ([self isObjcType:fromType] && [self isGobjType:toType]) {
 
 		// Converting from Objc -> Gobj
