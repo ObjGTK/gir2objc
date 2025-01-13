@@ -75,29 +75,21 @@
 
 - (OFString *)signatureForFirstParameter:(OGTKParameter *)p methodName:(OFString *)methodName
 {
-	OFString *parameterNameOutput;
-	if ([p.name isEqual:@"id"])
-		parameterNameOutput = @"identifier";
-	else
-		parameterNameOutput = p.name;
-
 	// Add the parameter name only when it's the same as the beginning of the method
 	// name Otherwise assume the method name already contains a named parameter.
 	if ([methodName.lowercaseString containsString:p.name.lowercaseString]) {
-		OFRange range = [methodName.lowercaseString rangeOfString:p.name.lowercaseString];
+		OFRange range = [methodName.lowercaseString rangeOfString:p.cName.lowercaseString];
 		if (range.location == 0)
 			return [OFString stringWithFormat:@"%@With%@:(%@)%@", methodName,
-			                 [OGTKUtil convertUSSToCapCase:parameterNameOutput], p.type,
-			                 parameterNameOutput];
+			                 [OGTKUtil convertUSSToCapCase:p.name], p.type, p.name];
 		else
-			return [OFString
-			    stringWithFormat:@"%@:(%@)%@", methodName, p.type, parameterNameOutput];
+			return [OFString stringWithFormat:@"%@:(%@)%@", methodName, p.type, p.name];
 	}
 
 	// If the method name does not contain a hint to the parameter name
 	// add it to have a sensible ObjC selector.
 	return [OFString stringWithFormat:@"%@With%@:(%@)%@", methodName,
-	                 [OGTKUtil convertUSSToCapCase:p.name], p.type, parameterNameOutput];
+	                 [OGTKUtil convertUSSToCapCase:p.name], p.type, p.name];
 }
 
 - (OFString *)nameOfTheOnlyParameter
