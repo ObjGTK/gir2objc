@@ -210,7 +210,7 @@ static OGTKMapper *sharedMyMapper = nil;
 	else if ([type isEqual:@"GInitiallyUnowned*"] || [type isEqual:@"GObject*"])
 		return @"OGObject*";
 	else if ([type isEqual:@"const gchar*"] || [type isEqual:@"gchar*"] ||
-	    [type isEqual:@"const char*"] || [type isEqual:@"gchar*"])
+	    [type isEqual:@"const char*"] || [type isEqual:@"char*"])
 		return @"OFString*";
 	else if ([type isEqual:@"Gtk"])
 		return @"OGTK";
