@@ -291,7 +291,7 @@
 		// Not all `get…` methods are marked as getters, so we currently
 		// apply this to all methods to allow ObjC dot-syntax for them.
 		if (![methodName isEqual:@"get"] && [methodName hasPrefix:@"get"]) {
-			methodName = [methodName substringFromIndex:4];
+			methodName = [methodName substringFromIndex:3];
 		}
 
 		// Don't use protected method names
