@@ -13,12 +13,12 @@
 
 #import "GIR/GIRInclude.h"
 
+#import "Exceptions/OGTKClassNoTypeException.h"
 #import "Exceptions/OGTKDataProcessingNotImplementedException.h"
 #import "Exceptions/OGTKGIRNoPackageException.h"
 #import "Exceptions/OGTKNamespaceContainsNoClassesException.h"
 #import "Exceptions/OGTKNoGIRAPIException.h"
 #import "Exceptions/OGTKNoGIRDictException.h"
-#import "Exceptions/OGTKClassNoTypeException.h"
 
 #import "XMLReader/XMLReader.h"
 
@@ -243,6 +243,7 @@
 	for (id<GIRMethodMapping> girMethod in girMethodArray) {
 		bool foundVarArgs = false;
 
+		// TODO: Implement varargs
 		// First need to check for varargs in list of
 		// parameters
 		for (GIRParameter *param in girMethod.parameters) {
@@ -277,6 +278,7 @@
 			if (girMethodInstance.glibGetForProperty != nil &&
 			    girMethodInstance.glibGetForProperty.length != 0)
 				objcMethod.isGetter = true;
+
 			if (girMethodInstance.glibSetForProperty != nil &&
 			    girMethodInstance.glibSetForProperty.length != 0)
 				objcMethod.isSetter = true;
@@ -284,10 +286,12 @@
 
 		// Leave "get" because this usually means we want to get a special
 		// object member (not implemented as a property),
-		// but otherwise remove "get" as a prefix for property getters because that's
+		// but otherwise remove "get" as a prefix for getters because that's
 		// against ObjC rules.
+		// Not all `get…` methods are marked as getters, so we currently
+		// apply this to all methods to allow ObjC dot-syntax for them.
 		if (![methodName isEqual:@"get"] && [methodName hasPrefix:@"get"]) {
-			methodName = [methodName substringFromIndex:3];
+			methodName = [methodName substringFromIndex:4];
 		}
 
 		[objcMethod setName:methodName];
