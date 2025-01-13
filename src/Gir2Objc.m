@@ -294,6 +294,11 @@
 			methodName = [methodName substringFromIndex:4];
 		}
 
+		if ([methodName isEqual:@"release"])
+			methodName = @"decrease_count";
+		else if ([methodName isEqual:@"retain"])
+			methodName = @"increase_count";
+
 		[objcMethod setName:methodName];
 		[objcMethod setCIdentifier:girMethod.cIdentifier];
 		objcMethod.documentation = girMethod.doc.docText;

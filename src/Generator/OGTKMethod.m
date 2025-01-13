@@ -38,14 +38,7 @@
 
 - (OFString *)name
 {
-	OFString *name = [OGTKUtil convertUSSToCamelCase:_name];
-
-	if([name isEqual:@"release"])
-		return @"decreaseCount";
-	else if([name isEqual:@"retain"])
-		return @"increaseCount";
-
-	return name;
+	return [OGTKUtil convertUSSToCamelCase:_name];
 }
 
 - (OFString *)sig
