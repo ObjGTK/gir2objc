@@ -51,21 +51,21 @@
 	else if (_parameters.count == 1) {
 		OGTKParameter *p = [_parameters objectAtIndex:0];
 
-		return [OFString stringWithFormat:@"%@:(%@)%@", self.name, p.type, p.name];
+		return [self signatureForFirstParameter:p methodName:self.name];
 	}
 	// C method with multiple parameters
 	else {
-		OFMutableString *output = [OFMutableString stringWithFormat:@"%@With", self.name];
+		OFMutableString *output = [OFMutableString string];
 
 		bool first = true;
 		for (OGTKParameter *p in _parameters) {
 			if (first) {
 				first = false;
-				[output appendFormat:@"%@:(%@)%@",
-				    [OGTKUtil convertUSSToCapCase:p.name], p.type, p.name];
+				[output appendString:[self signatureForFirstParameter:p
+				                                           methodName:self.name]];
 			} else {
 				[output appendFormat:@" %@:(%@)%@",
-				    [OGTKUtil convertUSSToCamelCase:p.name], p.type, p.name];
+				        [OGTKUtil convertUSSToCamelCase:p.name], p.type, p.name];
 			}
 		}
 
@@ -73,9 +73,36 @@
 	}
 }
 
-- (OFString *)nameOfTheOnlyParameter 
+- (OFString *)signatureForFirstParameter:(OGTKParameter *)p methodName:(OFString *)methodName
 {
-	if(self.parameters.count != 1)
+	OFString *parameterNameOutput;
+	if ([p.name isEqual:@"id"])
+		parameterNameOutput = @"identifier";
+	else
+		parameterNameOutput = p.name;
+
+	// Add the parameter name only when it's the same as the beginning of the method
+	// name Otherwise assume the method name already contains a named parameter.
+	if ([methodName.lowercaseString containsString:p.name.lowercaseString]) {
+		OFRange range = [methodName.lowercaseString rangeOfString:p.name.lowercaseString];
+		if (range.location == 0)
+			return [OFString stringWithFormat:@"%@With%@:(%@)%@", methodName,
+			                 [OGTKUtil convertUSSToCapCase:parameterNameOutput], p.type,
+			                 parameterNameOutput];
+		else
+			return [OFString
+			    stringWithFormat:@"%@:(%@)%@", methodName, p.type, parameterNameOutput];
+	}
+
+	// If the method name does not contain a hint to the parameter name
+	// add it to have a sensible ObjC selector.
+	return [OFString stringWithFormat:@"%@With%@:(%@)%@", methodName,
+	                 [OGTKUtil convertUSSToCapCase:p.name], p.type, parameterNameOutput];
+}
+
+- (OFString *)nameOfTheOnlyParameter
+{
+	if (self.parameters.count != 1)
 		return nil;
 
 	OGTKParameter *param = self.parameters.firstObject;

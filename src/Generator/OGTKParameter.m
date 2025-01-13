@@ -30,11 +30,7 @@
 
 - (OFString *)name
 {
-	OFString *name = [OGTKUtil convertUSSToCamelCase:_cName];
-	if([name isEqual:@"id"])
-		return @"identifier";
-
-	return name;
+	return [OGTKUtil convertUSSToCamelCase:_cName];
 }
 
 @end

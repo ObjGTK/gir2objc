@@ -294,6 +294,7 @@
 			methodName = [methodName substringFromIndex:4];
 		}
 
+		// Don't use protected method names
 		if ([methodName isEqual:@"release"])
 			methodName = @"decrease_count";
 		else if ([methodName isEqual:@"retain"])
