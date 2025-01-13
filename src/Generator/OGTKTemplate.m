@@ -78,7 +78,7 @@ OFString *const kPkgCheckModulesTemplateFile = @"pkgcheckmodules.tmpl";
 
 	OFMutableString *acArgWith = [OFMutableString string];
 	OFMutableString *pkgCheckModules = [OFMutableString string];
-	for (OFString *packageName in libraryInfo.packages) {
+	for (OFString *packageName in libraryInfo.packages.allObjects.sortedArray) {
 		[pkgCheckModules appendString:@"\n\n"];
 		[pkgCheckModules appendString:[self ACSnippetForPackage:packageName
 		                                        forLibraryNamed:libraryInfo.name]];
@@ -119,7 +119,7 @@ OFString *const kPkgCheckModulesTemplateFile = @"pkgcheckmodules.tmpl";
 
 	OFMutableString *result = [OFMutableString string];
 
-	for (GIRInclude *dependency in dependencies) {
+	for (GIRInclude *dependency in dependencies.allObjects.sortedArray) {
 		OFString *objfwPackageSnippet = [OFString stringWithContentsOfFile:fileName];
 
 		OGTKLibrary *libraryInfo =
@@ -152,7 +152,7 @@ OFString *const kPkgCheckModulesTemplateFile = @"pkgcheckmodules.tmpl";
 {
 	OFMutableString *result = [OFMutableString string];
 
-	for (GIRInclude *dependency in dependencies) {
+	for (GIRInclude *dependency in dependencies.allObjects.sortedArray) {
 		OGTKLibrary *libraryInfo =
 		    [self.sharedMapper libraryInfoByNamespace:dependency.name];
 

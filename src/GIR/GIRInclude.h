@@ -18,4 +18,6 @@
 @property (nonatomic, copy) OFString *name;
 @property (nonatomic, copy) OFString *version;
 
+- (OFComparisonResult)compare:(GIRInclude *)otherInclude;
+
 @end

@@ -46,4 +46,9 @@
 	}
 }
 
+- (OFComparisonResult)compare:(GIRInclude *)otherInclude
+{
+	return [self.name compare:otherInclude.name];
+}
+
 @end

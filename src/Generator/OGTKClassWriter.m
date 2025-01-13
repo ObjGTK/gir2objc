@@ -119,7 +119,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	// the class dependency tree
 	OFMutableString *includes = [OFMutableString string];
 	if (_classDescription.topMostGraphNode) {
-		for (GIRInclude *cInclude in _libraryDescription.cIncludes) {
+		for (GIRInclude *cInclude in _libraryDescription.cIncludes.allObjects.sortedArray) {
 			[includes appendFormat:@"#include <%@>\n", cInclude.name];
 		}
 		[includes appendString:@"\n"];
