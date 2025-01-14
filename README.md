@@ -20,7 +20,7 @@ f.e.
 gir2objc /usr/share/gir-1.0/Gtk-4.0.gir
 ```
 
-This will generate the library definition for GTK3 into the output dir specified by the config file. The output will include all the library dependencies specified by `Gtk-4.0.gir`.
+This will generate the library definition for GTK4 into the output dir specified by the config file. The output will include all the library dependencies specified by `Gtk-4.0.gir`.
 
 The generator is going to lookup these dependencies recursively at the path of the gir file specified as argument. You may exclude library and class dependencies of each library by modifying `global_conf.json` and `library_conf.json`.
 
