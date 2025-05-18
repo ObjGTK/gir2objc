@@ -410,7 +410,7 @@ static OGTKMapper *sharedMyMapper = nil;
 	if(range.location == OFNotFound)
 		return 0;
 
-	return identifier.length - range.length;
+	return identifier.length - range.location;
 }
 
 - (void)addDependenciesFromMethod:(OGTKMethod *)method to:(OGTKClass *)classInfo
