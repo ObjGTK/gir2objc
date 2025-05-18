@@ -231,8 +231,8 @@ OFString *const kPkgCheckModulesTemplateFile = @"pkgcheckmodules.tmpl";
 
 	OFMutableString *shortName;
 	if (range.location != OFNotFound) {
-		shortName =
-		    [OFMutableString stringWithString:[packageName substringToIndex:range.location]];
+		shortName = [OFMutableString
+		    stringWithString:[packageName substringToIndex:range.location]];
 		[shortName replaceOccurrencesOfString:@"-" withString:@""];
 		[shortName replaceOccurrencesOfString:@"_" withString:@""];
 	} else

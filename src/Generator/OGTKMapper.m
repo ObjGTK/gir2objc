@@ -311,7 +311,7 @@ static OGTKMapper *sharedMyMapper = nil;
 
 		// Converting from Gobjc -> Objc
 		return [OFString stringWithFormat:@"OGWrapperClassAndObjectForGObject(%@)", name];
-	
+
 	} else if ([fromType isEqual:@"OGObject*"] && [toType isEqual:@"GObject*"]) {
 
 		return [OFString stringWithFormat:@"[%@ %@]", name, @"gObject"];
@@ -397,7 +397,7 @@ static OGTKMapper *sharedMyMapper = nil;
 {
 	OFRange range = [identifier rangeOfString:@"*"];
 
-	if(range.location == OFNotFound)
+	if (range.location == OFNotFound)
 		return identifier;
 
 	return [identifier substringFromIndex:range.location + range.length];
@@ -407,7 +407,7 @@ static OGTKMapper *sharedMyMapper = nil;
 {
 	OFRange range = [identifier rangeOfString:@"*"];
 
-	if(range.location == OFNotFound)
+	if (range.location == OFNotFound)
 		return 0;
 
 	return identifier.length - range.location;
