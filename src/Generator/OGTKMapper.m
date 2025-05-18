@@ -395,24 +395,22 @@ static OGTKMapper *sharedMyMapper = nil;
 
 - (OFString *)stripAsterisks:(OFString *)identifier
 {
-	OFCharacterSet *charSet = [OFCharacterSet characterSetWithCharactersInString:@"*"];
-	size_t index = [identifier indexOfCharacterFromSet:charSet];
+	OFRange range = [identifier rangeOfString:@"*"];
 
-	if (index == OFNotFound)
+	if(range.location == OFNotFound)
 		return identifier;
 
-	return [identifier substringToIndex:index];
+	return [identifier substringFromIndex:range.location + range.length];
 }
 
 - (size_t)numberOfAsterisksIn:(OFString *)identifier
 {
-	OFCharacterSet *charSet = [OFCharacterSet characterSetWithCharactersInString:@"*"];
-	size_t index = [identifier indexOfCharacterFromSet:charSet];
+	OFRange range = [identifier rangeOfString:@"*"];
 
-	if (index == OFNotFound)
+	if(range.location == OFNotFound)
 		return 0;
 
-	return identifier.length - index;
+	return identifier.length - range.length;
 }
 
 - (void)addDependenciesFromMethod:(OGTKMethod *)method to:(OGTKClass *)classInfo

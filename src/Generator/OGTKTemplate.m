@@ -227,12 +227,12 @@ OFString *const kPkgCheckModulesTemplateFile = @"pkgcheckmodules.tmpl";
 {
 	OFCharacterSet *charSet =
 	    [OFCharacterSet characterSetWithCharactersInString:@"+0123456789"];
-	size_t index = [packageName indexOfCharacterFromSet:charSet];
+	OFRange range = [packageName rangeOfCharacterFromSet:charSet];
 
 	OFMutableString *shortName;
-	if (index != OFNotFound) {
+	if (range.location != OFNotFound) {
 		shortName =
-		    [OFMutableString stringWithString:[packageName substringToIndex:index]];
+		    [OFMutableString stringWithString:[packageName substringToIndex:range.location]];
 		[shortName replaceOccurrencesOfString:@"-" withString:@""];
 		[shortName replaceOccurrencesOfString:@"_" withString:@""];
 	} else
