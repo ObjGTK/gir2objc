@@ -30,4 +30,4 @@ No. I'm using Ubuntu 24.04 and Debian 12 only in the moment. PR welcome.
 
 ## Do you support macOS?
 
-gir2objc should work using MacPorts. PR welcome.
+gir2objc should work using GTK/GLib libs MacPorts. PR welcome.
