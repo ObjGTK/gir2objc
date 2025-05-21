@@ -3,7 +3,53 @@ gir2objc
 
 gir2objc is a utility that generates Objective-C language bindings for GNOME GLib/Gobject based libraries using GObject Introspection (GOI), which it does by parsing GIR files.
 
-It belongs to the ObjGTK project, which is a fork of [CoreGTK](https://github.com/coregtk), originally by Tyler Burton, now for use with [ObjFW](https://objfw.nil.im/) by Jonathan Schleifer.
+It is the heart of the ObjGTK project, which is a fork of [CoreGTK](https://github.com/coregtk), originally created by Tyler Burton, now in use with [ObjFW](https://objfw.nil.im/) by Jonathan Schleifer.
+
+ObjGTK and [gir2objc](https://codeberg.org/ObjGTK/gir2objc) are based on [Codeberg](https://codeberg.org/ObjGTK/). You will need a Codeberg account to submit and respond to issues.
+
+## Features
+
+- Objective-C API generation on a class level for any GObject based library that provides a proper GIR file
+- generated API wraps GObject in-parameters and return types of methods using Objective-C wrapper classes and `gchar` types using `OFString`
+- recursive generation for library dependencies
+- writing out documentation for classes and methods
+- error handling using ObjFW exceptions
+- memory management for GObject based classes providing manual reference counting (MRC) on library level using toggle references on GObject side
+- ARC (automatic reference counting) on application level is possible using clang
+- generic way of signal binding thanks to contributors
+- compatibility with gcc should be given currently (but providing only limited ObjC features of gcc, often called "Objective-C 2.0")
+- unwanted library dependencies may be excluded via configuration
+- unwanted (f.e. internal) classes may be excluded via configuration
+- configuration for renaming libraries
+- manual implementations of classes (or categories…) are added to the generated ones when placed in the `LibrarySourceAdditions` directory
+
+## Not-yet features (most wanted first)
+
+- configuration for renaming methods
+- configuration for renaming classes
+- generic way of callback binding (you may use regular C functions)
+- automatic subclassing (you may register types in C)
+- API generation for GLib types that are not GObject-based
+- wrapping or conversion of out-parameters of methods
+- conversion of C types that are not `gchar` or GObject-based (you may just use them "as is")
+- implementation of GObject class interfaces
+- ObjC implementation for container types like `GList`, `GSList`, `GHashTable` and `GArray`, `GPtrArray`, `GByteArray` using `OFArray` or `OFDictionary` f.e.
+
+## Maturity
+
+The current state of gir2objc I call "tech preview". I expect it to work, but it's far from being universally usable and I expect it to still have many bugs. I don't make any promises regarding its development progress as I develop it only as I need it for my (currently only) app [contacts2phone](https://codeberg.org/Letterus/contacts2phone).
+
+See [milestones](https://codeberg.org/Letterus/objgtkgen/milestones) for the further release plan.
+
+## Contributing
+
+You're welcome! Without your help this project isn't going to advance. Create a Codeberg account and submit a pull request. [Contact me](https://devbeejohn.de/contact.gmi) before submitting a bigger one. Agree to publishing under the terms of GPL 3.0.
+
+Join Matrix room `#objfw:nil.im` at any time to discuss issues and questions.
+
+## Can I… will you…?
+
+[See FAQ](FAQ.md).
 
 ## Usage
 
@@ -79,14 +125,6 @@ GNU LGPL 2.1 or later. This licensing was kept for the files existing and for th
 In consent with Tyler Burton the generator itself is released under GNU GPL 3.0 or later.
 
 Regarding GTK3 (and 4 or any other library wrapper) the generator is meant to generate wrapper source files which may be distributed under LGPL 2.1 or later.
-
-## Code base
-
-The code base of ObjGTK should be compatible with the Objective C dialect of GCC ("Objective C 2.0") as introduced as of Mac OS X 10.5. So there should be no need to use clang.
-
-Aim of the generator development is to generate library wrappers that map Objective-C memory management (MRC) to GObject memory management correctly. If this is achieved you should be able to use clang and ARC with any Objective-C app that builds upon these library wrappers.
-
-Currently there are only untested, unstable preview releases of ObjGTK. Take care when using. API is going to change. See [milestones](https://codeberg.org/Letterus/objgtkgen/milestones) for the further release plan.
 
 ## How it works
 
