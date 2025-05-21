@@ -20,7 +20,7 @@ No. PRs welcome.
 
 When you submit a well written [issue](https://codeberg.org/ObjGTK/gir2objc/issues) that may happen at some point. No time frame given. PR welcome.
 
-## Can I use ObjGTK without feature XY?
+## Can I use ObjGTK without it providing feature XY?
 
 Yes, as Objective-C is just a superset of C you may use any C/GLib feature at any time.
 
