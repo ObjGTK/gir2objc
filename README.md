@@ -33,7 +33,7 @@ ObjGTK and [gir2objc](https://codeberg.org/ObjGTK/gir2objc) are based on [Codebe
 - API generation for GLib types that are not GObject-based
 - wrapping or conversion of out-parameters of methods
 - conversion of C types that are not `gchar` or GObject-based (you may just use them "as is")
-- implementation of GObject class interfaces
+- ObjC implementation of [GObject type interfaces](https://docs.gtk.org/gobject/struct.TypeInterface.html)
 - ObjC implementation for container types like `GList`, `GSList`, `GHashTable` and `GArray`, `GPtrArray`, `GByteArray` using `OFArray` or `OFDictionary` f.e.
 
 ## Maturity
