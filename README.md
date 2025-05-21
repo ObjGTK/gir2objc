@@ -22,6 +22,7 @@ ObjGTK and [gir2objc](https://codeberg.org/ObjGTK/gir2objc) are based on [Codebe
 - unwanted (f.e. internal) classes may be excluded via configuration
 - configuration for renaming libraries
 - manual implementations of classes (or categories…) are added to the generated ones when placed in the `LibrarySourceAdditions` directory
+- generation of build files for each generated library that makes use of the very portable autoconf and ObjFW buildsys
 
 ## Not-yet features (most wanted first)
 
@@ -87,6 +88,16 @@ The generator is going to lookup these dependencies recursively at the path of t
 ### Build generated library wrappers
 
 - For building a generated library you need [OGObject](https://codeberg.org/ObjGTK/OGObject).
+
+Build a generated library calling from its root dir:
+
+```
+./autogen.sh
+./configure
+make
+```
+
+Use `make install` for installing. For further options to configure build and installation see `./configure --help`
 
 ### GIR files
 
