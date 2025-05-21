@@ -4,7 +4,9 @@
 
 It's the only object-oriented language supported by clang and gcc that's not C++.
 
-Seriously: It's nice, clean, simple, mature and delightful to use. If you've not used it before you will love its verbous and `[splendid syntax]`.
+Seriously: It's nice, clean, simple, mature and delightful to use. It compiles fast and produces small binaries. If you've not used it before you will love its verbous and `[splendid syntax]`.
+
+Investigating the GObject way of doing things you may get the impression it was modeled very closely to the concepts of Objective-C. So when you use Objective-C with an GObject based API it looks like GObject feeling home.
 
 ## Why ObjFW?
 
