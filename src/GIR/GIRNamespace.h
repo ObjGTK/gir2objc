@@ -23,6 +23,7 @@
 	OFString *_cSymbolPrefixes;
 	OFString *_cIdentifierPrefixes;
 	OFMutableArray *_classes;
+	OFMutableArray *_records;
 	OFMutableArray *_functions;
 	OFMutableArray *_enumerations;
 	OFMutableArray *_constants;
@@ -40,6 +41,7 @@
 @property (nonatomic, copy) OFString *cSymbolPrefixes;
 @property (nonatomic, copy) OFString *cIdentifierPrefixes;
 @property (nonatomic, retain) OFMutableArray *classes;
+@property (nonatomic, retain) OFMutableArray *records;
 @property (nonatomic, retain) OFMutableArray *functions;
 @property (nonatomic, retain) OFMutableArray *enumerations;
 @property (nonatomic, retain) OFMutableArray *constants;

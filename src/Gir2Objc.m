@@ -160,9 +160,6 @@
 		@throw [OGTKNamespaceContainsNoClassesException exception];
 
 	for (GIRClass *girClass in ns.classes) {
-		if(![girClass isKindOfClass:GIRClass.class])
-			continue;
-
 		void *pool = objc_autoreleasePoolPush();
 
 		if ([libraryInfo.excludeClasses containsObject:girClass.name])
@@ -203,8 +200,7 @@
 	[objCClass setDocumentation:girClass.doc.docText];
 
 	// Set parent name
-	if([girClass isKindOfClass:GIRClass.class])
-		[objCClass setParentName:girClass.parent];
+	[objCClass setParentName:girClass.parent];
 
 	// Try to set parent c type
 	// First try to get information from a <field> node.

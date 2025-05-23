@@ -11,8 +11,8 @@
 
 @synthesize name = _name, version = _version, sharedLibrary = _sharedLibrary,
             cSymbolPrefixes = _cSymbolPrefixes, cIdentifierPrefixes = _cIdentifierPrefixes,
-            classes = _classes, functions = _functions, enumerations = _enumerations,
-            constants = _constants, interfaces = _interfaces;
+            classes = _classes, records = _records, functions = _functions,
+            enumerations = _enumerations, constants = _constants, interfaces = _interfaces;
 
 - (instancetype)init
 {
@@ -21,6 +21,7 @@
 	@try {
 		_elementTypeName = @"GIRNamespace";
 		_classes = [[OFMutableArray alloc] init];
+		_records = [[OFMutableArray alloc] init];
 		_functions = [[OFMutableArray alloc] init];
 		_enumerations = [[OFMutableArray alloc] init];
 		_constants = [[OFMutableArray alloc] init];
@@ -41,6 +42,7 @@
 	[_cSymbolPrefixes release];
 	[_cIdentifierPrefixes release];
 	[_classes release];
+	[_records release];
 	[_functions release];
 	[_enumerations release];
 	[_constants release];
@@ -76,7 +78,7 @@
 		} else if ([key isEqual:@"record"]) {
 			[self processArrayOrDictionary:value
 			                     withClass:[GIRRecord class]
-			                      andArray:_classes];
+			                      andArray:_records];
 		} else if ([key isEqual:@"function"]) {
 			[self processArrayOrDictionary:value
 			                     withClass:[GIRFunction class]
