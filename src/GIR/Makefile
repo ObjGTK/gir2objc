@@ -17,6 +17,7 @@ SRCS = GIRAPI.m \
 	GIRParameter.m \
 	GIRPrerequisite.m \
 	GIRProperty.m \
+	GIRRecord.m \
 	GIRReturnValue.m \
 	GIRType.m \
 	GIRVarargs.m \

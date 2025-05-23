@@ -13,6 +13,7 @@
 #import "GIREnumeration.h"
 #import "GIRFunction.h"
 #import "GIRInterface.h"
+#import "GIRRecord.h"
 
 @interface GIRNamespace: GIRBase
 {

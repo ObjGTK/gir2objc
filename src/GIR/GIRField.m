@@ -30,7 +30,8 @@
 	for (OFString *key in dict) {
 		id value = [dict objectForKey:key];
 
-		if ([key isEqual:@"text"] || [key isEqual:@"doc"]) {
+		if ([key isEqual:@"text"] || [key isEqual:@"doc"] || [key isEqual:@"callback"] ||
+		    [key isEqual:@"introspectable"]) {
 			// Do nothing
 		} else if ([key isEqual:@"name"]) {
 			self.name = value;

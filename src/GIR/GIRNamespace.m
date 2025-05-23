@@ -54,7 +54,7 @@
 	for (OFString *key in dict) {
 		id value = [dict objectForKey:key];
 
-		if ([key isEqual:@"text"] || [key isEqual:@"record"] || [key isEqual:@"callback"] ||
+		if ([key isEqual:@"text"] || [key isEqual:@"callback"] ||
 		    [key isEqual:@"bitfield"] || [key isEqual:@"alias"] ||
 		    [key isEqual:@"function-macro"] || [key isEqual:@"docsection"] ||
 		    [key isEqual:@"union"] || [key isEqual:@"c:prefix"]) {
@@ -72,6 +72,10 @@
 		} else if ([key isEqual:@"class"]) {
 			[self processArrayOrDictionary:value
 			                     withClass:[GIRClass class]
+			                      andArray:_classes];
+		} else if ([key isEqual:@"record"]) {
+			[self processArrayOrDictionary:value
+			                     withClass:[GIRRecord class]
 			                      andArray:_classes];
 		} else if ([key isEqual:@"function"]) {
 			[self processArrayOrDictionary:value
