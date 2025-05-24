@@ -398,7 +398,7 @@ static OGTKMapper *sharedMyMapper = nil;
 	if (range.location == OFNotFound)
 		return identifier;
 
-	return [identifier substringFromIndex:range.location + range.length];
+	return [identifier substringToIndex:range.location];
 }
 
 - (size_t)numberOfAsterisksIn:(OFString *)identifier
