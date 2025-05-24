@@ -76,9 +76,8 @@
 
 - (OFString *)castGObjectMacro:(OFString *)variableName
 {
-	return [OFString
-	    stringWithFormat:@"G_TYPE_CHECK_INSTANCE_CAST(%@, g_type_from_name(\"%@\"), %@)",
-	    variableName, _cName, _cType];
+	return [OFString stringWithFormat:@"G_TYPE_CHECK_INSTANCE_CAST(%@, %@, %@)", variableName,
+	                 self.gTypeMacro, _cType];
 }
 
 - (void)addConstructor:(OGTKMethod *)constructor
