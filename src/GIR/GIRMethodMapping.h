@@ -5,13 +5,15 @@
  */
 
 #import "GIRReturnValue.h"
+#import "GIRParameter.h"
 #import <ObjFW/ObjFW.h>
 
 @protocol GIRMethodMapping <OFObject>
 
 @property (nonatomic, copy) OFString *_Nonnull name;
 @property (nonatomic, copy) OFString *_Nonnull cIdentifier;
-@property (nonatomic, retain) OFMutableArray *_Nullable parameters;
+@property (nonatomic, retain) OFMutableArray OF_GENERIC(GIRParameter *) *_Nullable parameters;
+@property (nonatomic, retain) GIRParameter *_Nullable instanceParameter;
 @property (nonatomic, retain) GIRReturnValue *_Nonnull returnValue;
 @property (nonatomic, retain) GIRDoc *_Nullable doc;
 @property (nonatomic) bool throws;

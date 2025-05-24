@@ -30,6 +30,8 @@
         toObjCClass:(OGTKClass *)objCClass
      usingNamespace:(GIRNamespace *)ns;
 
++ (void)mapGIRRecord:(GIRRecord *)girRecord toObjCClass:(OGTKClass *)objCClass;
+
 + (void)addMappedGIRMethods:(OFMutableArray OF_GENERIC(id<GIRMethodMapping>) *)girMethodArray
                 toObjCClass:(OGTKClass *)objCClass
               usingSelector:(SEL)addMethodSelector;
@@ -181,6 +183,32 @@
 		}
 		objc_autoreleasePoolPop(pool);
 	}
+
+	for (GIRRecord *girRecord in ns.records) {
+		void *pool = objc_autoreleasePoolPush();
+
+		if ([libraryInfo.excludeClasses containsObject:girRecord.name])
+			continue;
+
+		if (girRecord.glibIsGtypeStructFor == nil)
+			continue;
+
+		if (![mapper hasGIRType:girRecord.glibIsGtypeStructFor])
+			continue;
+
+		OGTKClass *objCClass = [mapper classInfoByGIRName:girRecord.glibIsGtypeStructFor];
+		[self mapGIRRecord:girRecord toObjCClass:objCClass];
+
+		objc_autoreleasePoolPop(pool);
+	}
+}
+
++ (void)mapGIRRecord:(GIRRecord *)girRecord toObjCClass:(OGTKClass *)objCClass
+{
+	// Set class methods (called "functions" currently)
+	[self addMappedGIRMethods:girRecord.methods
+	              toObjCClass:objCClass
+	            usingSelector:@selector(addFunction:)];
 }
 
 + (void)mapGIRClass:(GIRClass *)girClass
@@ -319,6 +347,14 @@
 
 		// Set if throws GError
 		[objcMethod setThrows:girMethod.throws];
+
+		// Set if class method
+		bool isClassMethod = (addMethodSelector == @selector(addFunction:) &&
+		    girMethod.instanceParameter != nil);
+		[objcMethod setIsClassMethod:isClassMethod];
+
+		// Set instance parameter
+		objcMethod.cInstanceParameter = girMethod.instanceParameter;
 
 		// Set parameters
 		OFMutableArray *paramArray = [[OFMutableArray alloc] init];

@@ -25,7 +25,7 @@
 @synthesize shadowedBy = _shadowedBy;
 @synthesize shadows = _shadows;
 @synthesize parameters = _parameters;
-@synthesize instanceParameters = _instanceParameters;
+@synthesize instanceParameter = _instanceParameter;
 
 - (instancetype)init
 {
@@ -34,7 +34,6 @@
 	@try {
 		_elementTypeName = @"GIRMethod";
 		_parameters = [[OFMutableArray alloc] init];
-		_instanceParameters = [[OFMutableArray alloc] init];
 	} @catch (id e) {
 		[self release];
 		@throw e;
@@ -56,7 +55,7 @@
 	[_doc release];
 	[_docDeprecated release];
 	[_parameters release];
-	[_instanceParameters release];
+	[_instanceParameter release];
 
 	[super dealloc];
 }
@@ -122,9 +121,8 @@
 				                     withClass:[GIRParameter class]
 				                      andArray:_parameters];
 			} else if ([paramKey isEqual:@"instance-parameter"]) {
-				[self processArrayOrDictionary:[value objectForKey:paramKey]
-				                     withClass:[GIRParameter class]
-				                      andArray:_instanceParameters];
+				self.instanceParameter = [[[GIRParameter alloc]
+				    initWithDictionary:[value objectForKey:paramKey]] autorelease];
 			}
 		}
 	} else {

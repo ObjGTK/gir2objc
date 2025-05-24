@@ -107,6 +107,11 @@ static OGTKMapper *sharedMyMapper = nil;
 		[_objcTypeToClassMapping removeObjectForKey:classInfo.type];
 }
 
+- (bool)hasGIRType:(OFString *)type
+{
+	return ([_girNameToClassMapping objectForKey:[self stripAsterisks:type]] != nil);
+}
+
 - (bool)isGobjType:(OFString *)type
 {
 	return ([_gobjTypeToClassMapping objectForKey:[self stripAsterisks:type]] != nil);
@@ -329,12 +334,12 @@ static OGTKMapper *sharedMyMapper = nil;
 
 - (OFString *)selfTypeMethodCall:(OFString *)type;
 {
-	// Convert OGTKFooBar into [self FOOBAR]
+	// Convert OGTKFooBar into [self castedGObject]
 	if ([self isObjcType:type]) {
 		return @"[self castedGObject]";
 	}
 
-	// Convert GtkFooBar into GTK_FOO_BAR([self GOBJECT])
+	// Convert GtkFooBar into G_TYPE_CHECK_INSTANCE_CAST([self GOBJECT], GtkFooBar, GtkFooBar)
 	if ([self isGobjType:type]) {
 		OGTKClass *classInfo =
 		    [_gobjTypeToClassMapping objectForKey:[self stripAsterisks:type]];
@@ -382,6 +387,17 @@ static OGTKMapper *sharedMyMapper = nil;
 	if (classInfo == nil)
 		@throw [OFUndefinedKeyException exceptionWithObject:_gobjTypeToClassMapping
 		                                                key:gobjType];
+
+	return classInfo;
+}
+
+- (OGTKClass *)classInfoByGIRName:(OFString *)girName
+{
+	OGTKClass *classInfo = [_girNameToClassMapping objectForKey:girName];
+
+	if (classInfo == nil)
+		@throw [OFUndefinedKeyException exceptionWithObject:_girNameToClassMapping
+		                                                key:girName];
 
 	return classInfo;
 }

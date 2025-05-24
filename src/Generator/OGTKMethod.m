@@ -12,8 +12,9 @@
 @implementation OGTKMethod
 @synthesize name = _name, cIdentifier = _cIdentifier, cReturnType = _cReturnType,
             cOwnershipTransferType = _cOwnershipTransferType, documentation = _documentation,
-            returnValueDocumentation = _returnValueDocumentation, parameters = _parameters,
-            throws = _throws, isGetter = _isGetter, isSetter = _isSetter;
+            returnValueDocumentation = _returnValueDocumentation,
+            cInstanceParameter = _cInstanceParameter, parameters = _parameters, throws = _throws,
+            isGetter = _isGetter, isSetter = _isSetter, isClassMethod = _isClassMethod;
 
 - (instancetype)init
 {
@@ -31,6 +32,7 @@
 	[_cReturnType release];
 	[_documentation release];
 	[_returnValueDocumentation release];
+	[_cInstanceParameter release];
 	[_parameters release];
 
 	[super dealloc];

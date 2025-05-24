@@ -31,7 +31,7 @@
 	bool _shadowedBy;
 	bool _shadows;
 	OFMutableArray *_parameters;
-	OFMutableArray *_instanceParameters;
+	GIRParameter *_instanceParameter;
 }
 
 @property (nonatomic, copy) OFString *name;
@@ -49,8 +49,8 @@
 @property (nonatomic) bool introspectable;
 @property (nonatomic) bool shadowedBy;
 @property (nonatomic) bool shadows;
-@property (nonatomic, retain) OFMutableArray *parameters;
-@property (nonatomic, retain) OFMutableArray *instanceParameters;
+@property (nonatomic, retain) OFMutableArray OF_GENERIC(GIRParameter *) * parameters;
+@property (nonatomic, retain) GIRParameter *instanceParameter;
 
 - (bool)tryParseWithKey:(OFString *)key andValue:(id)value;
 

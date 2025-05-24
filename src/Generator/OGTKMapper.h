@@ -118,8 +118,14 @@
 - (void)detectAndMarkCircularClassDependencies;
 
 /**
- * @brief Returns if a given type string is listed as Gobj class type
- * @return True if the given string is a listed Gobj class type
+ * @brief Returns if a given type string is listed as GObj type name
+ * @return True if the given string is a listed GObj type name
+ */
+- (bool)hasGIRType:(OFString *)type;
+
+/**
+ * @brief Returns if a given type string is listed as Gobj C class name
+ * @return True if the given string is a listed Gobj C class name
  */
 - (bool)isGobjType:(OFString *)type;
 
@@ -212,11 +218,18 @@
 - (OFString *)getCTypeFromName:(OFString *)name;
 
 /**
- * @brief Returns the class info object if found in the dictionary by the Gobj
+ * @brief Returns the class info object if found in the dictionary by the Gobj C
  * type name given
- * @param gobjTypeUnfiltered The Gobj type name to look for. It may contain pointer asterisks (*)
+ * @param gobjTypeUnfiltered The Gobj type name to look for. It may contain pointer asterisks (*), which will be stripped
  */
 - (OGTKClass *)classInfoByGobjType:(OFString *)gobjTypeUnfiltered;
+
+/**
+ * @brief Returns the class info object if found in the dictionary by the Gobj
+ * type name (GIR name) given
+ * @param girName The Gobj type name specified by the GObj type system and the Gir files to look for.
+ */
+- (OGTKClass *)classInfoByGIRName:(OFString *)girName;
 
 /**
  * @brief Returns the library info object if found in the dictionary by the name

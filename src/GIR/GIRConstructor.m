@@ -22,7 +22,7 @@
 @synthesize docDeprecated = _docDeprecated;
 @synthesize returnValue = _returnValue;
 @synthesize parameters = _parameters;
-@synthesize instanceParameters = _instanceParameters;
+@synthesize instanceParameter = _instanceParameter;
 
 - (instancetype)init
 {
@@ -37,6 +37,22 @@
 	}
 
 	return self;
+}
+
+- (void)dealloc
+{
+	[_name release];
+	[_cIdentifier release];
+	[_version release];
+	[_deprecatedVersion release];
+	[_shadowedBy release];
+	[_shadows release];
+	[_doc release];
+	[_docDeprecated release];
+	[_parameters release];
+	[_instanceParameter release];
+
+	[super dealloc];
 }
 
 - (void)parseDictionary:(OFDictionary *)dict
@@ -78,31 +94,15 @@
 					                     withClass:[GIRParameter class]
 					                      andArray:_parameters];
 				} else if ([paramKey isEqual:@"instance-parameter"]) {
-					[self processArrayOrDictionary:[value objectForKey:paramKey]
-					                     withClass:[GIRParameter class]
-					                      andArray:_instanceParameters];
+					self.instanceParameter = [[[GIRParameter alloc]
+					    initWithDictionary:[value objectForKey:paramKey]]
+					    autorelease];
 				}
 			}
 		} else {
 			[self logUnknownElement:key];
 		}
 	}
-}
-
-- (void)dealloc
-{
-	[_name release];
-	[_cIdentifier release];
-	[_version release];
-	[_deprecatedVersion release];
-	[_shadowedBy release];
-	[_shadows release];
-	[_doc release];
-	[_docDeprecated release];
-	[_parameters release];
-	[_instanceParameters release];
-
-	[super dealloc];
 }
 
 @end

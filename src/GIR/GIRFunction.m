@@ -21,7 +21,7 @@
 @synthesize doc = _doc;
 @synthesize returnValue = _returnValue;
 @synthesize parameters = _parameters;
-@synthesize instanceParameters = _instanceParameters;
+@synthesize instanceParameter = _instanceParameter;
 
 - (id)init
 {
@@ -30,13 +30,28 @@
 	@try {
 		_elementTypeName = @"GIRFunction";
 		_parameters = [[OFMutableArray alloc] init];
-		_instanceParameters = [[OFMutableArray alloc] init];
 	} @catch (id e) {
 		[self release];
 		@throw e;
 	}
 
 	return self;
+}
+
+- (void)dealloc
+{
+	[_name release];
+	[_cIdentifier release];
+	[_movedTo release];
+	[_version release];
+	[_deprecatedVersion release];
+	[_docDeprecated release];
+	[_doc release];
+	[_returnValue release];
+	[_parameters release];
+	[_instanceParameter release];
+
+	[super dealloc];
 }
 
 - (void)parseDictionary:(OFDictionary *)dict
@@ -79,31 +94,15 @@
 					                     withClass:[GIRParameter class]
 					                      andArray:_parameters];
 				} else if ([paramKey isEqual:@"instance-parameter"]) {
-					[self processArrayOrDictionary:[value objectForKey:paramKey]
-					                     withClass:[GIRParameter class]
-					                      andArray:_instanceParameters];
+					self.instanceParameter = [[[GIRParameter alloc]
+					    initWithDictionary:[value objectForKey:paramKey]]
+					    autorelease];
 				}
 			}
 		} else {
 			[self logUnknownElement:key];
 		}
 	}
-}
-
-- (void)dealloc
-{
-	[_name release];
-	[_cIdentifier release];
-	[_movedTo release];
-	[_version release];
-	[_deprecatedVersion release];
-	[_docDeprecated release];
-	[_doc release];
-	[_returnValue release];
-	[_parameters release];
-	[_instanceParameters release];
-
-	[super dealloc];
 }
 
 @end

@@ -6,6 +6,7 @@
  */
 
 #import "../GIR/GIRReturnValue.h"
+#import "../GIR/GIRParameter.h"
 #import "OGTKParameter.h"
 #import <ObjFW/ObjFW.h>
 
@@ -19,11 +20,13 @@
 	OFString *_cReturnType;
 	OFString *_documentation;
 	OFString *_returnValueDocumentation;
-	OFArray *_parameters;
+	GIRParameter *_cInstanceParameter;
+	OFArray OF_GENERIC(OGTKParameter *) *_parameters;
 	GIROwnershipTransferType _cOwnershipTransferType;
 	bool _throws;
 	bool _isGetter;
 	bool _isSetter;
+	bool _isClassMethod;
 }
 
 @property (copy, nonatomic) OFString *name;
@@ -35,10 +38,12 @@
 @property (atomic) GIROwnershipTransferType cOwnershipTransferType;
 @property (readonly, nonatomic) OFString *returnType;
 @property (readonly, nonatomic) bool returnsVoid;
-@property (copy, nonatomic) OFArray *parameters;
+@property (retain, nonatomic) GIRParameter *cInstanceParameter;
+@property (retain, nonatomic) OFArray OF_GENERIC(OGTKParameter *) *parameters;
 @property (nonatomic) bool throws;
 @property (nonatomic) bool isGetter;
 @property (nonatomic) bool isSetter;
+@property (nonatomic) bool isClassMethod;
 
 - (OFString *)nameOfTheOnlyParameter;
 

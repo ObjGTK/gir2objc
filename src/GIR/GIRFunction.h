@@ -27,7 +27,7 @@
 	GIRDoc *_doc;
 	GIRReturnValue *_returnValue;
 	OFMutableArray *_parameters;
-	OFMutableArray *_instanceParameters;
+	GIRParameter *_instanceParameter;
 }
 
 @property (nonatomic, copy) OFString *name;
@@ -42,6 +42,6 @@
 @property (nonatomic, retain) GIRDoc *doc;
 @property (nonatomic, retain) GIRReturnValue *returnValue;
 @property (nonatomic, retain) OFMutableArray *parameters;
-@property (nonatomic, retain) OFMutableArray *instanceParameters;
+@property (nonatomic, retain) GIRParameter *instanceParameter;
 
 @end
