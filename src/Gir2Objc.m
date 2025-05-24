@@ -322,6 +322,15 @@
 			methodName = [methodName substringFromIndex:3];
 		}
 
+		// Make sure there is no method starting with "init" as GObject constructors
+		// end with new (so those are no constructors)
+		if ([methodName isEqual:@"init"])
+			methodName = @"prepare";
+		if ([methodName hasPrefix:@"init"]) {
+			methodName = [OFString
+			    stringWithFormat:@"prepare%@", [methodName substringFromIndex:4]];
+		}
+
 		// Don't use protected method names
 		if ([methodName isEqual:@"release"])
 			methodName = @"decrease_count";
