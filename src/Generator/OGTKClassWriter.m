@@ -237,7 +237,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Class function implementation
 	for (OGTKMethod *func in _classDescription.functions) {
-		[self appendMethodDefinitionOf:func toString:output classMethod:true];
+		[self appendMethodDefinitionOf:func toString:output classFunction:true];
 	}
 
 	// Constructor implementations
@@ -262,7 +262,8 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 		[output appendFormat:@"\t%@* gobjectValue = %@;\n\n", _classDescription.cType,
 		        castedConstructorCall];
 		[output appendString:@"\tif OF_UNLIKELY(!gobjectValue)\n"];
-		[output appendString:@"\t\t@throw [OGObjectGObjectToWrapCreationFailedException exception];\n\n"];
+		[output appendString:@"\t\t@throw [OGObjectGObjectToWrapCreationFailedException "
+		                     @"exception];\n\n"];
 
 		if (_classDescription.derivedFromInitiallyUnowned) {
 			[output
@@ -292,11 +293,11 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// GObject getter method implementation
 	[output appendFormat:@"- (%@*)%@\n{\n\treturn %@;\n}\n\n", _classDescription.cType,
-	        @"castedGObject", [_mapper selfTypeMethodCall:_classDescription.cType]];
+	        @"castedGObject", [_classDescription castGObjectMacro:@"[self gObject]"]];
 
 	// Method implementations
 	for (OGTKMethod *meth in _classDescription.methods) {
-		[self appendMethodDefinitionOf:meth toString:output classMethod:false];
+		[self appendMethodDefinitionOf:meth toString:output classFunction:false];
 	}
 
 	// End implementation
@@ -307,9 +308,9 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 - (void)appendMethodDefinitionOf:(OGTKMethod *)method
                         toString:(OFMutableString *)output
-                     classMethod:(bool)isClassMethod
+                   classFunction:(bool)isClassFunction
 {
-	if (isClassMethod)
+	if (isClassFunction)
 		[output appendFormat:@"+ (%@)%@", method.returnType, method.sig];
 	else
 		[output appendFormat:@"- (%@)%@", method.returnType, method.sig];
@@ -323,21 +324,31 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	                                    [self generateCParameterListString:method.parameters
 	                                                       throwsException:method.throws]];
 
-	OFString *cInstanceFuncSig =
+	OFString *cClassMethodSig =
 	    [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
-	              [self generateCParameterListWithInstanceString:_classDescription.type
-	                                                   andParams:method.parameters
-	                                             throwsException:method.throws]];
+	              [self generateCParameterListWithInstanceParametersAndParams:method.parameters
+	                                                          throwsException:method.throws
+	                                                            isClassMethod:true]];
+
+	OFString *cObjectMethodSig =
+	    [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
+	              [self generateCParameterListWithInstanceParametersAndParams:method.parameters
+	                                                          throwsException:method.throws
+	                                                            isClassMethod:false]];
 
 	// No return type/GObject/ObjC object
 	if (method.returnsVoid) {
-		if (isClassMethod) {
+		if (isClassFunction && !method.isClassMethod) {
 			[output appendString:@"\t"];
 			[output appendString:cClassFuncSig];
 			[output appendString:@";\n"];
+		} else if (isClassFunction && method.isClassMethod) {
+			[output appendString:@"\t"];
+			[output appendString:cClassMethodSig];
+			[output appendString:@";\n"];
 		} else {
 			[output appendString:@"\t"];
-			[output appendString:cInstanceFuncSig];
+			[output appendString:cObjectMethodSig];
 			[output appendString:@";\n"];
 		}
 
@@ -356,10 +367,12 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 			// the result
 			[output appendFormat:@"\t%@ gobjectValue = ", method.cReturnType];
 
-			if (isClassMethod) {
+			if (isClassFunction && !method.isClassMethod) {
 				[output appendString:cClassFuncSig];
+			} else if (isClassFunction && method.isClassMethod) {
+				[output appendString:cClassMethodSig];
 			} else {
-				[output appendString:cInstanceFuncSig];
+				[output appendString:cObjectMethodSig];
 			}
 
 			[output appendString:@";\n\n"];
@@ -405,10 +418,12 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 			[output appendFormat:@"\t%@ returnValue = (%@)", method.returnType,
 			        method.returnType];
 
-			if (isClassMethod) {
+			if (isClassFunction && !method.isClassMethod) {
 				[output appendString:cClassFuncSig];
+			} else if (isClassFunction && method.isClassMethod) {
+				[output appendString:cClassMethodSig];
 			} else {
-				[output appendString:cInstanceFuncSig];
+				[output appendString:cObjectMethodSig];
 			}
 
 			[output appendString:@";\n\n"];
@@ -514,13 +529,17 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	return paramsOutput;
 }
 
-- (OFString *)generateCParameterListWithInstanceString:(OFString *)instanceType
-                                             andParams:(OFArray OF_GENERIC(OGTKParameter *) *)params
-                                       throwsException:(bool)throws
+- (OFString *)generateCParameterListWithInstanceParametersAndParams:(OFArray OF_GENERIC(
+                                                                        OGTKParameter *) *)params
+                                                    throwsException:(bool)throws
+                                                      isClassMethod:(bool)isClassMethod
 {
 	OFMutableString *paramsOutput = [OFMutableString string];
 
-	[paramsOutput appendString:[OGTKMapper selfTypeMethodCall:instanceType]];
+	if (isClassMethod)
+		[paramsOutput appendFormat:@"[self castedGObjectClass]"];
+	else
+		[paramsOutput appendFormat:@"[self castedGObject]"];
 
 	size_t count = params.count;
 

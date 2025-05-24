@@ -21,6 +21,9 @@
 	self = [super init];
 
 	_throws = false;
+	_isGetter = false;
+	_isSetter = false;
+	_isClassMethod = false;
 
 	return self;
 }

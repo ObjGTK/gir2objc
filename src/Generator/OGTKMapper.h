@@ -193,18 +193,6 @@
                 ownership:(GIROwnershipTransferType)ownership;
 
 /**
- * @brief Returns the appropriate self referencing method call for the type
- * (i.e. -(type)[self TYPE] or GTK_TYPE([self GOBJECT]) to unwrap the Gobj
- * object instance
- * @param type The Gobj or ObjC class name for which the method call should be
- * generated.
- * @return The code snipped holding the method call snipped to unwrap the Gobj
- * object instance.
- *
- */
-- (OFString *)selfTypeMethodCall:(OFString *)type;
-
-/**
  * @brief Returns the cType (Gobj type) for a name following the gir file naming
  * convention
  * @details In some cases the gir format files do not provide cTypes (Gobj/Glib
@@ -291,14 +279,6 @@
                  withName:(OFString *)name
                    toType:(OFString *)toType
                 ownership:(GIROwnershipTransferType)ownership;
-
-/**
- * @brief Returns the appropriate self referencing method call for the type
- * (i.e. -(type)[self TYPE] or GTK_TYPE([self GOBJECT]) to unwrap the Gobj
- * object instance. Singleton access shortcut.
- * @see -selfTypeMethodCall:
- */
-+ (OFString *)selfTypeMethodCall:(OFString *)type;
 
 /**
  * @brief Returns the cType (Gobj type) for a name following the gir file naming

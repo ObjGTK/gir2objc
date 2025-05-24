@@ -332,24 +332,6 @@ static OGTKMapper *sharedMyMapper = nil;
 	return name;
 }
 
-- (OFString *)selfTypeMethodCall:(OFString *)type;
-{
-	// Convert OGTKFooBar into [self castedGObject]
-	if ([self isObjcType:type]) {
-		return @"[self castedGObject]";
-	}
-
-	// Convert GtkFooBar into G_TYPE_CHECK_INSTANCE_CAST([self GOBJECT], GtkFooBar, GtkFooBar)
-	if ([self isGobjType:type]) {
-		OGTKClass *classInfo =
-		    [_gobjTypeToClassMapping objectForKey:[self stripAsterisks:type]];
-
-		return [classInfo castGObjectMacro:@"[self gObject]"];
-	}
-
-	return type;
-}
-
 - (OFString *)getCTypeFromName:(OFString *)name
 {
 	// Some shortcut definitions from libraries we do not want to add as
@@ -557,13 +539,6 @@ static OGTKMapper *sharedMyMapper = nil;
 	OGTKMapper *sharedMapper = [OGTKMapper sharedMapper];
 
 	return [sharedMapper convertType:fromType withName:name toType:toType ownership:ownership];
-}
-
-+ (OFString *)selfTypeMethodCall:(OFString *)type
-{
-	OGTKMapper *sharedMapper = [OGTKMapper sharedMapper];
-
-	return [sharedMapper selfTypeMethodCall:type];
 }
 
 + (OFString *)getCTypeFromName:(OFString *)name
