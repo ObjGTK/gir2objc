@@ -157,11 +157,14 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	[output
 	    appendFormat:@"@interface %@ : %@\n{\n\n}\n\n", [_classDescription type], parentClass];
 
+	[output appendString:@"/**\n * Functions and class methods\n */\n"];
+	[output appendString:@"+ (void)load;\n\n"];
+
+	// GObject class getter class method declaration
+	[output appendString:@"+ (GObjectTypeClass*)gObjectClass;\n"];
+
 	// Function declarations
 	if (_classDescription.hasFunctions) {
-		[output appendString:@"/**\n * Functions\n */\n"];
-		[output appendString:@"+ (void)load;\n\n"];
-
 		for (OGTKMethod *func in _classDescription.functions) {
 			[output appendFormat:@"\n%@\n", [self generateDocumentationForMethod:func]];
 
@@ -235,7 +238,12 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	            @"}\n\n",
 	        _classDescription.gTypeMacro];
 
-	// Class function implementation
+	// Class function and method implementation
+	// GObject class getter class method implementation
+	[output appendFormat:@"+ (%@*)%@\n{\n\treturn %@;\n}\n\n", @"GObjectTypeClass",
+	        @"gObjectClass",
+	        [OFString stringWithFormat:@"g_type_class_peek(%@)", _classDescription.gTypeMacro]];
+
 	for (OGTKMethod *func in _classDescription.functions) {
 		[self appendMethodDefinitionOf:func toString:output classFunction:true];
 	}
@@ -434,7 +442,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 				    ([_mapper numberOfAsterisksIn:method.cReturnType] < 2))
 					varName = @"returnValue";
 
-				// Don't take care ownership if we return plain C types
+				// Don't take care of ownership if we return plain C types
 				// (GIRReturnValueOwnershipNone!) That's the task of the caller in
 				// this case
 				[output
@@ -537,7 +545,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	OFMutableString *paramsOutput = [OFMutableString string];
 
 	if (isClassMethod)
-		[paramsOutput appendFormat:@"[self castedGObjectClass]"];
+		[paramsOutput appendFormat:@"[self gObjectClass]"];
 	else
 		[paramsOutput appendFormat:@"[self castedGObject]"];
 
