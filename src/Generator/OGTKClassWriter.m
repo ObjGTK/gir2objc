@@ -161,7 +161,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	[output appendString:@"+ (void)load;\n\n"];
 
 	// GObject class getter class method declaration
-	[output appendString:@"+ (GObjectTypeClass*)gObjectClass;\n"];
+	[output appendString:@"+ (GTypeClass*)gObjectClass;\n"];
 
 	// Function declarations
 	if (_classDescription.hasFunctions) {
@@ -230,6 +230,7 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	[output appendFormat:@"@implementation %@\n\n", _classDescription.type];
 
 	[output appendFormat:
+	            @"static GTypeClass *gObjectClass = NULL;\n\n"
 	            @"+ (void)load\n{\n"
 	            @"\tGType gtypeToAssociate = %@;\n\n"
 	            @"\tif (gtypeToAssociate == 0)\n"
@@ -240,9 +241,12 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	// Class function and method implementation
 	// GObject class getter class method implementation
-	[output appendFormat:@"+ (%@*)%@\n{\n\treturn %@;\n}\n\n", @"GObjectTypeClass",
-	        @"gObjectClass",
-	        [OFString stringWithFormat:@"g_type_class_peek(%@)", _classDescription.gTypeMacro]];
+	[output appendFormat:@"+ (GTypeClass*)gObjectClass\n{\n"
+	                     @"\tif(gObjectClass != NULL)\n"
+	                     @"\t\treturn gObjectClass;\n\n"
+	                     @"\tgObjectClass = g_type_class_ref(%@);\n"
+	                     @"\treturn gObjectClass;\n}\n\n",
+	        _classDescription.gTypeMacro];
 
 	for (OGTKMethod *func in _classDescription.functions) {
 		[self appendMethodDefinitionOf:func toString:output classFunction:true];
