@@ -98,16 +98,19 @@
  * @brief Generates list of parameters to pass to an underlying C function
  * including the call to get a referene to an instance of the object or the class.
  *
+ * @param instanceParameter Specification for the instance parameter (the first), allowing the
+ * method to cast them correctly
  * @param params An array of parameters to generate the list for
  * @param throws True to add a parameter for error handling
  * @param isClassMethod Whether to reference the object or the class instance for method the
  * instance parameter. True to reference the class instance the method belongs to.
  * @return The string containing the list of parameters, formatted correctly
  */
-- (OFString *)generateCParameterListWithInstanceParametersAndParams:(OFArray OF_GENERIC(
-                                                                        OGTKParameter *) *)params
-                                                    throwsException:(bool)throws
-                                                      isClassMethod:(bool)isClassMethod;
+- (OFString *)generateCParameterListWithInstanceParameter:(GIRParameter *)instanceParameter
+                                                AndParams:(OFArray OF_GENERIC(
+                                                              OGTKParameter *) *)params
+                                          throwsException:(bool)throws
+                                            isClassMethod:(bool)isClassMethod;
 
 /**
  * @brief Uses the information description object to return correctly formatted

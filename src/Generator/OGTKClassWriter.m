@@ -338,15 +338,17 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 
 	OFString *cClassMethodSig =
 	    [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
-	              [self generateCParameterListWithInstanceParametersAndParams:method.parameters
-	                                                          throwsException:method.throws
-	                                                            isClassMethod:true]];
+	              [self generateCParameterListWithInstanceParameter:method.cInstanceParameter
+	                                                      AndParams:method.parameters
+	                                                throwsException:method.throws
+	                                                  isClassMethod:true]];
 
 	OFString *cObjectMethodSig =
 	    [OFString stringWithFormat:@"%@(%@)", method.cIdentifier,
-	              [self generateCParameterListWithInstanceParametersAndParams:method.parameters
-	                                                          throwsException:method.throws
-	                                                            isClassMethod:false]];
+	              [self generateCParameterListWithInstanceParameter:method.cInstanceParameter
+	                                                      AndParams:method.parameters
+	                                                throwsException:method.throws
+	                                                  isClassMethod:false]];
 
 	// No return type/GObject/ObjC object
 	if (method.returnsVoid) {
@@ -541,17 +543,20 @@ static OFString *const InitCatch = @"\t} @catch (id e) {\n"
 	return paramsOutput;
 }
 
-- (OFString *)generateCParameterListWithInstanceParametersAndParams:(OFArray OF_GENERIC(
-                                                                        OGTKParameter *) *)params
-                                                    throwsException:(bool)throws
-                                                      isClassMethod:(bool)isClassMethod
+- (OFString *)generateCParameterListWithInstanceParameter:(GIRParameter *)instanceParameter
+                                                AndParams:(OFArray OF_GENERIC(
+                                                              OGTKParameter *) *)params
+                                          throwsException:(bool)throws
+                                            isClassMethod:(bool)isClassMethod
 {
 	OFMutableString *paramsOutput = [OFMutableString string];
 
 	if (isClassMethod)
-		[paramsOutput appendFormat:@"[self gObjectClass]"];
+		[paramsOutput
+		    appendFormat:@"(%@)[self gObjectClass]", instanceParameter.type.cType];
 	else
-		[paramsOutput appendFormat:@"[self castedGObject]"];
+		[paramsOutput
+		    appendFormat:@"(%@)[self castedGObject]", instanceParameter.type.cType];
 
 	size_t count = params.count;
 
