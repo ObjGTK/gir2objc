@@ -11,6 +11,5 @@
     "xlib",
     "cairo",
     "Soup",
-    "Gee"
   ]
 }

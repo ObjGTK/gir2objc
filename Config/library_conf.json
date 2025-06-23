@@ -46,4 +46,10 @@
       "NglRenderer"
     ]
   },
+  "Gee-0.8":  {
+    "customName": "OGee",
+    "excludeClasses": [
+      "Lazy"
+    ]
+  }
 }
