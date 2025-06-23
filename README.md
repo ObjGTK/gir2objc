@@ -24,21 +24,21 @@ ObjGTK and [gir2objc](https://codeberg.org/ObjGTK/gir2objc) are based on [Codebe
 - manual implementations of classes (or categories…) are added to the generated ones when placed in the `LibrarySourceAdditions` directory
 - generation of build files for each generated library that makes use of the very portable autoconf and ObjFW buildsys
 
-## Not-yet features (most wanted first)
+## Not-yet features, most wanted first (workaround in brackets)
 
 - configuration for renaming methods
 - configuration for renaming classes
 - generic way of callback binding (you may use regular C functions)
-- automatic subclassing (you may register types in C)
-- API generation for GLib types that are not GObject-based
+- automatic subclassing (you may register types in C or use Vala for subclassing)
+- API generation for GLib types that are not GObject-based/non-GObject records
 - wrapping or conversion of out-parameters of methods
 - conversion of C types that are not `gchar` or GObject-based (you may just use them "as is")
-- ObjC implementation of [GObject type interfaces](https://docs.gtk.org/gobject/struct.TypeInterface.html)
+- ObjC implementation of [GObject type interfaces](https://docs.gtk.org/gobject/struct.TypeInterface.html), protocol translation layer
 - ObjC implementation for container types like `GList`, `GSList`, `GHashTable` and `GArray`, `GPtrArray`, `GByteArray` using `OFArray` or `OFDictionary` f.e.
 
 ## Maturity
 
-The current state of gir2objc I call "tech preview". I expect it to work, but it's far from being universally usable and I expect it to still have many bugs. I don't make any promises regarding its development progress as I develop it only as I need it for my (currently only) app [contacts2phone](https://codeberg.org/Letterus/contacts2phone).
+The current state of gir2objc I call "tech preview". I expect it to work, but it's far from being complete or universally usable and I expect it to still have many bugs. I don't make any promises regarding its development progress as I develop it only as I need it for my (currently only) app [contacts2phone](https://codeberg.org/Letterus/contacts2phone).
 
 See [milestones](https://codeberg.org/Letterus/objgtkgen/milestones) for the further release plan.
 

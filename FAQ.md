@@ -1,5 +1,9 @@
 # FAQ
 
+## Is ObjGTK production ready?
+
+No, it's not. I'm currently using it to develop [a small app](https://codeberg.org/Letterus/contacts2phone). I'm adding missing features to ObjGTK as I go. Once I managed to build that app I'm going to release version 0.2. No timeline given.
+
 ## Why Objective-C?
 
 It's nice, clean, simple, mature and delightful to use. It compiles fast and produces small binaries. If you've not used it before you will love its verbous and `[splendid syntax]`.
@@ -16,7 +20,7 @@ No. PRs welcome.
 
 ## Will you fix bug XY?
 
-When you submit a well written [issue](https://codeberg.org/ObjGTK/gir2objc/issues) that may happen at some point. No time frame given. PR welcome.
+When you submit a well written [issue](https://codeberg.org/ObjGTK/gir2objc/issues) that may happen at some point. No timeframe given. PR welcome.
 
 ## Can I use ObjGTK without it providing feature XY?
 
