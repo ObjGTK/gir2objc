@@ -7,6 +7,16 @@ It is the heart of the ObjGTK project, which is a fork of [CoreGTK](https://gith
 
 ObjGTK and [gir2objc](https://codeberg.org/ObjGTK/gir2objc) are based on [Codeberg](https://codeberg.org/ObjGTK/). You will need a Codeberg account to submit and respond to issues.
 
+## Maturity
+
+gir2objc is abandoned. It was a "tech preview" or a "proof of concept" whether GObject bindings could be done in Objective-C using ObjFW. It turns out: It can be done and it could be very delightful to use, but I'm missing time to accomplish it.
+
+## Contributing
+
+You're welcome to pick this project up, I am happy to transfer it to you. Or create a Codeberg account and submit a pull request. [Contact me](https://devbeejohn.de/contact.gmi) before submitting a bigger one. Agree to publishing under the terms of GPL 3.0.
+
+Join Matrix room `#objfw:nil.im` at any time to discuss issues and questions.
+
 ## Features
 
 - Objective-C API generation on a class level for any GObject based library that provides a proper GIR file
@@ -35,22 +45,6 @@ ObjGTK and [gir2objc](https://codeberg.org/ObjGTK/gir2objc) are based on [Codebe
 - conversion of C types that are not `gchar` or GObject-based (you may just use them "as is")
 - ObjC implementation of [GObject type interfaces](https://docs.gtk.org/gobject/struct.TypeInterface.html), protocol translation layer
 - ObjC implementation for container types like `GList`, `GSList`, `GHashTable` and `GArray`, `GPtrArray`, `GByteArray` using `OFArray` or `OFDictionary` f.e.
-
-## Maturity
-
-The current state of gir2objc I call "tech preview". I expect it to work, but it's far from being complete or universally usable and I expect it to still have many bugs. I don't make any promises regarding its development progress as I develop it only as I need it for my (currently only) app [contacts2phone](https://codeberg.org/Letterus/contacts2phone).
-
-See [milestones](https://codeberg.org/Letterus/objgtkgen/milestones) for the further release plan.
-
-## Contributing
-
-You're welcome! Without your help this project isn't going to advance. Create a Codeberg account and submit a pull request. [Contact me](https://devbeejohn.de/contact.gmi) before submitting a bigger one. Agree to publishing under the terms of GPL 3.0.
-
-Join Matrix room `#objfw:nil.im` at any time to discuss issues and questions.
-
-## Can I… will you…?
-
-[See FAQ](FAQ.md).
 
 ## Usage
 
